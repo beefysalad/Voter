@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/ICON.ico">
+    <link rel="stylesheet" href="/..css/bootstrap.min.css">
+    <script src="../js/bootstrap.min.js"></script>
+    <title>EVote System</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
+    <link rel="stylesheet" href="/css/carousel.css">
+    <link rel="stylesheet" href="/css/mdb.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <style>
+        INPUT:-webkit-autofill,select:-webkit-autofill,TEXTAREA:-webkit-autofill{animation-name:onautofillstart}INPUT:not(:-webkit-autofill),SELECT:not(:-webkit-autofill),TEXTAREA:not(:-webkit-autofill){animation-name:onautofillcancel}@keyframes
+        onautofillstart{from{}}@keyframes onautofillcancel{from{}}
+    </style>
+        <!-- Font Awesome -->
+    <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+    rel="stylesheet"
+    />
+    <!-- Google Fonts -->
+    <link
+    href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+    rel="stylesheet"
+    />
+    <!-- MDB -->
+    <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.css"
+    rel="stylesheet"
+    />
+</head>
+<body>
+    <!-- <img src="./DashBoard/img/MainCar1.png" alt=""> -->
+    <header>
+        <nav class="sticky-top navbar navbar-expand-lg navbar-dark d-none d-lg-block" style="z-index: 2000;">
+            <div class="container-fluid">
+                <a class="navbar-brand nav-link" href="#">
+                    <strong>EVote | Electronic Voting System</strong>
+                </a>
+                <button class="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#navbarExample01" aria-controls="navbarExample01" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarExample01">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                      <li class="nav-item active">
+                        <a class="nav-link" aria-current="page" href="/">Home</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="/" rel="nofollow">Voters Portal</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="/about-us">About us</a>
+                      </li>
+                    </ul>
+        
+                    <ul class="navbar-nav d-flex flex-row">
+                      
+                      <li class="nav-item me-3 me-lg-0">
+                        <a class="nav-link" href="https://www.youtube.com/channel/UCWbQYNdWY_Kgrf3FDZtByrw" rel="nofollow" target="_blank">
+                          <i class="fab fa-youtube"></i>
+                        </a>
+                      </li>
+                      <li class="nav-item me-3 me-lg-0">
+                        <a class="nav-link" href="https://www.facebook.com/citucomelec" rel="nofollow" target="_blank">
+                          <i class="fab fa-facebook-f"></i>
+                        </a>
+                      </li>
+                      <li class="nav-item me-3 me-lg-0">
+                        <a class="nav-link" href="https://twitter.com/citstudentpress" rel="nofollow" target="_blank">
+                          <i class="fab fa-twitter"></i>
+                        </a>
+                      </li>
+                      <li class="nav-item me-3 me-lg-0">
+                        <a class="nav-link" href="https://github.com/Daxu010/EVote-System-OSBE_" rel="nofollow" target="_blank">
+                          <i class="fab fa-github"></i>
+                        </a>
+                      </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div id="introCarousel" class="carousel slide carousel-fade shadow-2-strong" data-mdb-ride="carousel">
+        
+            <ol class="carousel-indicators">
+              <li data-mdb-target="#introCarousel" data-mdb-slide-to="0" class=""></li>
+              <li data-mdb-target="#introCarousel" data-mdb-slide-to="1" class=""></li>
+              <li data-mdb-target="#introCarousel" data-mdb-slide-to="2" class="active" aria-current="true"></li>
+            </ol>   
+
+            <div class="carousel-inner">  
+              <div class="carousel-item">
+                <div class="mask" style="background-color: rgba(0, 0, 0, 0.6);">
+                  <div class="d-flex justify-content-center align-items-center h-100">
+                    <div class="text-white text-center">
+                      <h1 class="mb-3">ELECTRONIC VOTING SYSTEM</h1>
+                      <h5 class="mb-4">AN EFFICIENT WAY TO VOTE FOR ANY UNIVERSITY ELECTIONS</h5>
+                      <a class="btn btn-outline-light btn-lg m-2" href="/admin-login" role="button" rel="nofollow">Already have an account? Log-in</a>
+                      <a class="btn btn-outline-light btn-lg m-2" href="/admin-registration" role="button">Sign up for an ADMIN account</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+               
+              <div class="carousel-item">
+                <div class="mask" style="background-color: rgba(0, 0, 0, 0.7);">
+                  <div class="d-flex justify-content-center align-items-center h-100">
+                    <div class="text-white text-center">
+                      <h2>NOT A RUNNING CANDIDATE?</h2>
+                      <h5 class="mb-4 mt-3">REGISTER FOR VOTERS ACCOUNT!</h5>
+                      <a target="_#" class="btn btn-outline-light btn-lg m-2" href="/voters-login" role="button" rel="nofollow">Already have an account? Log-in</a>
+                      <a class="btn btn-outline-light btn-lg m-2" href="/voters-registration" role="button">Sign up for a VOTERS account</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+               
+              <div class="carousel-item active">
+                <div class="mask" style="background-color: rgba(0, 0, 0, 0.7)">
+                  <div class="d-flex justify-content-center align-items-center h-100">
+                    <div class="text-white text-center">
+                      <h2>YOUR VOTE COUNTS!</h2>
+                      <h5>VOTE WISELY!</h5>
+                      <a class="btn btn-outline-light btn-lg m-2 mt-5" href="https://www.facebook.com/media/set/?vanity=TheTechnologianStudentPress&set=a.10159178838936772" target="_blank" role="button">KNOW YOUR CANDIDATES!</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+         
+            <a class="carousel-control-prev" href="#introCarousel" role="button" data-mdb-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#introCarousel" role="button" data-mdb-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="sr-only">Next</span>
+            </a>
+        </div>
+    </header>
+    <main class="mt-5">
+        <div class="container">
+        
+        <section id="home">
+          <div class="row">
+            <div class="col-md-6 gx-5 mb-4">
+              <div class="bg-image hover-overlay ripple shadow-2-strong" data-mdb-ripple-color="light">
+                <img src="/img/db_1.png" class="img-fluid">
+                <a href="#!">
+                  <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>
+                </a>
+              </div>
+            </div>
+            <div class="col-md-6 gx-5 mb-4">
+              <h4><strong>EVote System</strong></h4>
+              <p class="text-muted" style="text-align: justify; text-justify: inter-word;">
+                The University has conducted a lot of elections from the past. Since the start of the pandemic, we conduct learning
+                through online classes and the election system is also conducted through google forms. To conduct an organized and 
+                cleaner election for our school, a voting system is important. This will help the elections run smoother and it will
+                encourage other students to vote for their candidates. A good voting system can also help improve the good image of
+                the school. 
+              </p>
+              <p><strong>ABOUT EVOTE</strong></p>
+              <p class="text-muted" style="text-align: justify; text-justify: inter-word;">
+                The University E-Vote requires users to have internet access as the application uses a cloud database to store user
+                information and ballot information. The ComElec will be able to manage the “running of election” part since they will
+                be provided administrative access to place candidates in their designated “boxes”. The application can also keep track
+                of tabulation and it ensures that no ballot is missed.
+              </p>
+            </div>
+          </div>
+        </section>       
+
+        <hr class="my-5">
+     
+        <section class="text-center" id="features">
+          <h4 class="mb-5"><strong>USERS PORTAL</strong></h4>
+
+          <div class="row">
+            <div class="col-lg-4 col-md-12 mb-4">
+              <div class="card trgt-card">
+                <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
+                  <img src="/img/admin.gif" class="img-fluid img-1" height="100%">
+                  <a href="#!">
+                    <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>
+                  </a>
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">Admin's Portal</h5>
+                  <p class="card-text">
+                    Do you want to have a proper and efficient voting system for your running candidates? <a href="../FrontEnd/AdminReg.html">Register</a> or <a href="../FrontEnd/AdminLogin.html">Login</a>  to an account here!
+                 
+                  </p>
+                 
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="card trgt-card">
+                <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
+                  <img src="/img/UserReg.gif" class="img-fluid img-1">
+                  <a href="#!">
+                    <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>
+                  </a>
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">Portals</h5>
+                  <p class="card-text">
+                    Voter users will have to register for an account here to integrate their essential informations in order to vote. <a href="../FrontEnd/VoterReg.html">Register</a> or <a href="../FrontEnd/VotersLogin.html">Login</a> to an account here!
+                  </p>
+                 
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="card trgt-card">
+                <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
+                  <img src="/img/kyc.gif" class="img-fluid img-1">
+                  <a href="#!">
+                    <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>
+                  </a>
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">KNOW YOUR CANDIDATES!</h5>
+                  <p class="card-text">
+                    Learn more about your
+                    <a href="https://www.facebook.com/media/set/?vanity=TheTechnologianStudentPress&set=a.10159178838936772" target="_blank">EXECOM Candidates</a>
+                    and 
+                    <a href="https://www.facebook.com/media/set/?vanity=TheTechnologianStudentPress&set=a.10159176129266772" target="_blank">Representative Candidates</a>
+                    to know where to cast your vote.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      
+        <hr class="my-5">
+    
+      </div>
+    </main>
+
+    <footer class="bg-light text-lg-start">
+
+        <div class="text-center py-4 align-items-center">
+          <p>Powered by: </p>
+        
+          <a href="https://nodejs.org/en/" class="btn btn-dark m-1" role="button" rel="nofollow" target="_blank">
+          <i class="fab fa-node fa-2x"></i>
+          </a>
+          <a href="https://developer.mozilla.org/en-US/docs/Web/HTML" class="btn btn-warning m-1" role="button" rel="nofollow" target="_blank">
+          <i class="fab fa-html5 fa-2x"></i>
+          </a>
+          <a href="https://www.w3schools.com/css/css_intro.asp" role="button" rel="nofollow" class="btn btn-success m-1" target="_blank">
+          <i class="fab fa-css3-alt fa-2x"></i>
+        </a>
+          <a href="https://getbootstrap.com/docs/5.0/getting-started/introduction/" class="btn btn-danger m-1" role="button" rel="nofollow" target="_blank">
+          <i class="fab fa-bootstrap fa-2x"></i>
+          </a>
+          <a href="https://www.mongodb.com/" class="btn btn-primary m-1" role="button" rel="nofollow" target="_blank">
+          <i class="fas fa-database fa-2x"></i>
+          </a>
+          
+          
+        </div>
+  
+      
+        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+          © 2021 Copyright:
+          <a class="text-dark" href="#">Order of the Sadboy Empire</a>. All Rights Reserved.
+        </div>
+        
+      </footer>
+      <script type="text/javascript" src="js/mdb.min.js"></script>
+      <script></script>
+            <!-- MDB -->
+      <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.js"
+      ></script>
+</body>
+<grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration>
+</html>

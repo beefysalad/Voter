@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <script src="/javascript/bootstrap.min.js"></script>
+    <link rel="icon" href="/ICON.ico">
+<title>Admin's Dashboard</title>
+<style>
+    .control{
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+    }
+    .all_logs{
+        display: none;
+    }
+    .crt{
+        display: none;
+    }
+    .user-name{
+        text-decoration: none;
+    }
+    .dataTable > thead > tr > th[class*=sort]:after{ display:none; }
+    .targetz{
+        background-color: rgb(13, 110, 253);
+    }
+    .test{
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+    }
+    .test2{
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+    }
+    table.dataTable thead .sorting:after,
+    table.dataTable thead .sorting_asc:after,
+    table.dataTable thead .sorting_desc:after,
+    table.dataTable thead .sorting:before,
+    table.dataTable thead .sorting_asc:before,
+    table.dataTable thead .sorting_desc:before {
+        display: none;
+    }
+    @media (max-width: 376px){
+        body{
+            background-color: pink;
+        }
+        tr{
+            font-size: 10px;
+        }
+    }
+</style>
+<link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="sb-nav-fixed">
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+        <!-- Navbar Brand-->
+        <a class="navbar-brand ps-3" href="/admin-dashboard">Dashboard</a>
+        <!-- Sidebar Toggle-->
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+        <!-- Navbar-->
+        <ul class="navbar-nav ms-auto me-0 me-md-3 my-2 my-md-0">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                    <!-- <li><hr class="dropdown-divider" /></li> -->
+                    <li><a class="dropdown-item" href="/logoutAdmin">Logout</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+    <div id="layoutSidenav">
+        <div id="layoutSidenav_nav">
+            <nav class="sb-sidenav accordion sb-sidenav-dark targetz" id="sidenavAccordion">
+                <div class="sb-sidenav-menu">
+                    <div class="nav">
+                        <div class="sb-sidenav-menu-heading">MAIN</div>
+                        <a class="nav-link" href="#">
+                            <div class="sb-nav-link-icon">
+                                <i class="fas fa-tachometer-alt"></i>
+                            </div>
+                            Register Candidates
+                        </a>
+                        <div class="sb-sidenav-menu-heading">Coverage</div>
+                        <a target="_blank" class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                            Registered Candidates
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseLayoutz" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav cameras_but">
+                            </nav>
+                        </div>
+                        <a target="_blank" class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayout3" aria-expanded="false" aria-controls="collapseLayout1">
+                            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                             Tally of Votes
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                    </div>
+                </div>
+                <div class="sb-sidenav-footer py-2">
+                    <div class="small">Logged in as:</div>
+                    
+                    
+                    <img src="<%=user.imgUrl%> " alt="" class="test2">
+                 <%= user.name %> 
+                </div>
+            </nav>
+        </div>
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
+                    <div class="card mt-5">
+                        <div class="card-header current_day">
+                            <i class="fas fa-table me-1"></i>
+                            <!-- Daily Logs -->Current Voting
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-light table-striped table-hover" id="example" style="width: 100%">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                       
+                                        <th scope="col">Votation For</th>
+                                        <th scope="col">No. of Candidates</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col">Date: Duration of Voting</th>
+                                    </tr>
+                                </thead>
+                        
+                                <tbody>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                </tbody>
+                            </table>
+                            <a href="#" class="btn btn-primary mt-5">Back</a>
+                         <!--   <button class="btn btn-warning" onclick="ExportToExcel('xlsx')">Convert to excel</button> -->
+                        </div>
+                    </div>
+                    
+                </div>
+
+            </main>
+            <footer class="py-4 bg-light mt-3">
+               
+            </footer>
+        </div>
+    </div>
+
+
+    
+
+</script>
+</body>
+</html>
+
