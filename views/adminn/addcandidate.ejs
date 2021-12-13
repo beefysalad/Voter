@@ -9,6 +9,18 @@
     <link rel="icon" href="/ICON.ico">
 <title>Admin's Dashboard</title>
 <style>
+    .imagez{
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        margin: 0 auto;
+        cursor: pointer;
+    }
+    .left-content{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
     .control{
         width: 40px;
         height: 40px;
@@ -59,7 +71,7 @@
 <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <!-- Navbar Brand-->
-        <a class="navbar-brand ps-3" href="../FrontEnd/AdminDB.html">Dashboard</a>
+        <a class="navbar-brand ps-3" href="/admin-dashboard">Dashboard</a>
         <!-- Sidebar Toggle-->
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
         <!-- Navbar-->
@@ -69,7 +81,7 @@
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                   <!--  <li><a class="dropdown-item" href="/establishments-account-settings">Account Settings</a></li>
                     <li><hr class="dropdown-divider" /></li> -->
-                    <li><a class="dropdown-item" href="../FrontEnd/AdminLogin.html">Logout</a></li>
+                    <li><a class="dropdown-item" href="/logoutAdmin">Logout</a></li>
                 </ul>
             </li>
         </ul>
@@ -80,14 +92,26 @@
                 <div class="sb-sidenav-menu">
                     <div class="nav">
                         <div class="sb-sidenav-menu-heading">MAIN</div>
-                        <a class="nav-link" href="../FrontEnd/AddCandidate.html">
+                        <a class="nav-link" href="#">
                             <div class="sb-nav-link-icon">
                                 <i class="fas fa-tachometer-alt"></i>
                             </div>
                             Register Candidates
                         </a>
                         <div class="sb-sidenav-menu-heading">Coverage</div>
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                        <a class="nav-link" href="/admin-dashboard">
+                            <div class="sb-nav-link-icon">
+                                <i class="fas fa-tachometer-alt"></i>
+                            </div>
+                            Registered Candidates
+                        </a>
+                        <a class="nav-link" href="/admin-dashboard">
+                            <div class="sb-nav-link-icon">
+                                <i class="fas fa-tachometer-alt"></i>
+                            </div>
+                            Tally of Votes
+                        </a>
+                        <!-- <a class="nav-link collapsed" href="/admin-dashboard" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
                             <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                             Registered Candidates
                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
@@ -100,7 +124,7 @@
                             <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                              Tally of Votes
                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
+                        </a> -->
                     </div>
                 </div>
                 <div class="sb-sidenav-footer py-2">
@@ -118,11 +142,11 @@
                     </div>
                     <div class="card-body" style="border: 1px solid black;">
                         <div class="container">
-                          <form action="/client-profile/edit?_method=PATCH" method="POST" enctype="multipart/form-data">
+                          <form action="/admin-add-candidate" method="POST" enctype="multipart/form-data">
                                 <div class="row">
                                     <div class="col-md-3">
                                         <div class="left-content mt-5">
-                                            <img src="" alt="#" class="imagez" onclick="changePic()">
+                                            <img src="https://res.cloudinary.com/dhqqwdevm/image/upload/v1631383900/DEV/defaultmale_xwnrss.jpg" alt="#" class="imagez" onclick="changePic()">
                                             <input type="file" name="img" id="img" style="display: none;"  class="form-control" accept="image/png, image/jpeg, image/gif,image/jpg">
                                             <a href="#" class="text-center mt-2" onclick="changePic()">Edit Picture</a>  
                                         </div>
@@ -132,38 +156,53 @@
                                         <div class="right-content row">
                                             <div class="col-md-6">
                                                 <label for="firstName" class="form-label mt-4">First Name</label>
-                                                <input type="text" name="firstName" id="firstName" class="form-control" required>
+                                                <input type="text" name="firstName" id="firstName" class="form-control" required placeholder="First Name">
                                             </div>
                                             <div class="col-md-6">
                                                 <label for="lastName" class="form-label mt-4">Last Name</label>
-                                                <input type="text" name="lastName" id="lastName" class="form-control"  required>
-                                            </div>
-                                            <div class="col-md-12">
-                                                <label for="username" class="form-label mt-3">Username</label>
-                                                <input type="text" name="username" id="username" class="form-control" required>
+                                                <input type="text" name="lastName" id="lastName" class="form-control"  required placeholder="Last Name">
                                             </div>
                                             <div class="col-md-6">
-                                                <label for="emailAddress" class="form-label mt-3">Institutional Email Address</label>
-                                                <input type="email" name="emailAddress" id="emailAddress" class="form-control" required>
+                                                <label for="position" class="form-label mt-3">Position</label>
+                                                <input type="text" name="position" id="position" class="form-control" required placeholder="Position">
                                             </div>
                                             <div class="col-md-6">
-                                                <label for="contactNumber" class="form-label mt-3">Contact Number</label>
-                                                <input type="number" name="contactNumber" id="contactNumber" class="form-control" required>
+                                                <label class="form-label mt-3" for="event">Event</label>
+                                                <select required id="event" name="event" class="form-select" aria-label="Default select example">
+                                                    <option  value="" selected disabled hidden>Select Event</option>
+                                                    <option value="General Election">General Election</option>
+                                                    <option value="Departmental Election">Departmental Election</option>
+                                                    <option value="Others">Others</option>
+                                                </select>
                                             </div>
+                                            <div class="col-md-4">
+                                                <label for="party" class="form-label mt-3">Party</label>
+                                                <input type="text" name="party" id="party" class="form-control" required placeholder="Party">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="course" class="form-label mt-3">Course & Year</label>
+                                                <input type="text" name="course" id="course" class="form-control" required placeholder="Course & Year">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label mt-3" for="schoolyear">School Year</label>
+                                                <select required id="schoolyear" name="schoolyear" class="form-select" aria-label="Default select example">
+                                                    <option  value="" selected disabled hidden>School Year</option>
+                                                    <option value="2021-2022">S.Y 2021-2022</option>
+                                                    <option value="2022-2023">S.Y 2022-2023</option>
+                                                    <option value="Others">Others</option>
+                                                </select>
+                                            </div>   
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-12">
-                                        <label for="address" class="form-label mt-3">Course & Year</label>
-                                        <input type="text" name="address" id="address" class="form-control" required>
-                                    </div>                               
+                                                               
                                     <hr class="mt-5">
                                 </div>
                                 <div class="row d-flex">
                                     <div>
                                         <button class="btn btn-warning">Add Candidate</button>
-                                        <button class="btn btn-danger">Register Candidate</button>
+                                        <!-- <button class="btn btn-danger">Register Candidate</button> -->
                                     </div>
                                 </div>
                             </form>
@@ -178,11 +217,45 @@
             </footer>
         </div>
     </div>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script>
+        function changePic(){
+            document.querySelector('#img').click()
+        }
+        window.onresize = resize
+        function resize(){
+            if(screen.width<1165){
+                if(screen.width>767){
+                    document.querySelector('.right-content').classList.add('ms-4')
+                }
+                else{
+                    document.querySelector('.right-content').classList.remove('ms-4')
+                }
+                
+            }
+            else if(screen.width>1164){
+                document.querySelector('.right-content').classList.remove('ms-4')
+            }
+        }
+        const image = document.querySelector('#img')
+        $(function () {
+            $("#img").change(function () {
+                readURL(this);
+            });
+        });
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    //alert(e.target.result);
+                    $('.imagez').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
 
-
-    
-
-</script>
 </body>
 </html>
 

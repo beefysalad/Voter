@@ -5,12 +5,34 @@ const path = require('path')
 const mongoose = require('mongoose')
 const Admin = require('./model/admin')
 const Voter = require('./model/voter')
+const Candidate = require('./model/candidate')
 const bcrypt = require('bcrypt')
 const flash = require('express-flash')
 const session = require('express-session')
 const passport = require('passport')
+const multer = require('multer')
+const dotenv = require('dotenv')
+const cloudinary = require('cloudinary').v2
+const {CloudinaryStorage} = require('multer-storage-cloudinary')
+
 const localStrategy = require('passport-local').Strategy
 
+dotenv.config()
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+})
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params:{
+        folder:"DEV"
+    }
+})
+const upload = multer({
+    storage: storage,
+   
+})
 app.use(session({
     secret:"topibakat",
     resave: false,
@@ -239,10 +261,75 @@ app.get('/logoutAdmin',(req,res)=>{
     req.logOut()
     res.redirect('/admin-login')
 })
-app.get('/admin-dashboard',isLoggedInA,(req,res)=>{
+app.get('/registered-candidates/GeneralElection',isLoggedInA,async(req,res)=>{
     const user = req.user
-    res.render("adminn/dashboard",{user})
+    const votingFor = "General Election"
+    const data = await Candidate.find({})
+    let array = []
+    for(let i=0; i<data.length; i++){
+        if(data[i].event===votingFor){
+            array.push(data[i])
+        }
+    }
+    res.render('adminn/eventlist',{user,votingFor,array})
+})
+app.get('/registered-candidates/DepartmentalElection',isLoggedInA,async(req,res)=>{
+    const user = req.user
+    const votingFor = "Departmental Election"
+    const data = await Candidate.find({})
+    let array = []
+    for(let i=0; i<data.length; i++){
+        if(data[i].event===votingFor){
+            array.push(data[i])
+        }
+    }
+    res.render('adminn/eventlist',{user,votingFor,array})
+})
+app.get('/admin-dashboard',isLoggedInA,async(req,res)=>{
+    const user = req.user
+    const data = await Candidate.find({})
+    let departmental = []
+    let general = []
+    for(let i=0; i<data.length; i++){
+        if(data[i].event==='Departmental Election'){
+            departmental.push(data[i])
+        }else if(data[i].event==='General Election'){
+            general.push(data[i])
+        }
+    }
+    // console.log(departmental)
+    // console.log(data)
+    res.render("adminn/dashboard",{user,departmental,general})
 })
 app.get('/admin-add-candidates',isLoggedInA,(req,res)=>{
     res.render('adminn/addcandidate')
+})
+app.post('/admin-add-candidate',upload.single('img'),async(req,res)=>{
+    let addCandidate
+    if(req.file){
+         addCandidate = new Candidate({
+            firstName:req.body.firstName,
+           lastName:req.body.lastName,
+           position:req.body.position,
+           party:req.body.party,
+           courseYear: req.body.course,
+           event:req.body.event,
+           schoolTerm:req.body.schoolyear,
+           imgUrl: req.file.path
+          })
+        
+    }else{
+          addCandidate = new Candidate({
+          firstName:req.body.firstName,
+           lastName:req.body.lastName,
+           position:req.body.position,
+           party:req.body.party,
+           courseYear: req.body.course,
+           event:req.body.event,
+           schoolTerm:req.body.schoolyear,
+           imgUrl:"https://res.cloudinary.com/dhqqwdevm/image/upload/v1631383900/DEV/defaultmale_xwnrss.jpg"
+    })
+    }
+    await addCandidate.save().then(()=>{})
+    res.redirect('/admin-add-candidates')
 })
