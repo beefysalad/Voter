@@ -30,7 +30,7 @@ const voterAccount = new Schema({
         require:true,
         type:String
     },
-    gender:{
+    department:{
         require:true,
         type:String
     },
@@ -40,6 +40,15 @@ const voterAccount = new Schema({
     },
     imgUrl:{
         type:String
+    },
+    exeComHasV:{
+        type:Boolean
+    },
+    repHasV:{
+        type:Boolean
+    },
+    departHasV:{
+        type:Boolean
     }
 })
 module.exports = mongoose.model('voter',voterAccount)

@@ -115,13 +115,12 @@
                     <div class="card mt-5">
                         <div class="card-header current_day">
                             <i class="fas fa-table me-1"></i>
-                            <!-- Daily Logs -->Current Voting 
+                            Current Voting 
                         </div>
                         <div class="card-body">
                             <table class="table table-light table-striped table-hover" id="example" style="width: 100%">
                                 <thead>
                                     <tr>
-                                       
                                         <th scope="col">Votation For</th>
                                         <th scope="col">No. of Candidates</th>
                                         <th scope="col">Status</th>
@@ -129,33 +128,28 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <% if (departmental) { %>
-                                       
-                                            <tr>
-                                                <td><a href="/registered-candidates/DepartmentalElection" class="event_name"><%= departmental[0].event %></a> </td>
-                                                <td><%= departmental.length %> </td>
-                                                <td>On Going</td>
-                                                <td><%=departmental[0].schoolTerm%> </td>
-                                            </tr>
-                                        
-                                    <% } %>
-                                    <% if (general) { %>
-                                       
-                                            <tr>
-                                                <td><a href="/registered-candidates/GeneralElection" class="event_name"><%= general[0].event %></a></td>
-                                                <td><%= general.length %> </td>
-                                                <td>On Going</td>
-                                                <td><%=general[0].schoolTerm%></td>
-                                            </tr>
-                                        
-                                    <% } %>
                                     
+                                    <% if (department.length!=0) { %>
+                                       
+                                            <tr>
+                                                <td><a href="/registered-candidates/DepartmentalElection" class="event_name"><%= department[0].event %></a> </td>
+                                                <td><%= department.length %> </td>
+                                                <td>On Going</td>
+                                                <td><%=department[0].schoolTerm%> </td>
+                                            </tr>
+                                        
+                                            <% } %>
+                                            <% if (general.length!=0) { %>
+                                               
+                                                    <tr>
+                                                        <td><a href="/registered-candidates/GeneralElection" class="event_name"><%= general[0].event %></a></td>
+                                                        <td><%= general.length %> </td>
+                                                        <td>On Going</td>
+                                                        <td><%=general[0].schoolTerm%></td>
+                                                    </tr>
+                                            <% } %>
                                 </tbody>
-                               
-                               
                             </table>
-                            <!-- <a href="#" class="btn btn-primary mt-5">Back</a> -->
-                         <!--   <button class="btn btn-warning" onclick="ExportToExcel('xlsx')">Convert to excel</button> -->
                         </div>
                     </div>
                     

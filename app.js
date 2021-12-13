@@ -6,15 +6,19 @@ const mongoose = require('mongoose')
 const Admin = require('./model/admin')
 const Voter = require('./model/voter')
 const Candidate = require('./model/candidate')
+const General = require('./model/general')
+const Department = require('./model/department')
+const Votes = require('./model/votes')
 const bcrypt = require('bcrypt')
 const flash = require('express-flash')
 const session = require('express-session')
 const passport = require('passport')
 const multer = require('multer')
 const dotenv = require('dotenv')
+const UserVote = require('./model/uservote')
 const cloudinary = require('cloudinary').v2
 const {CloudinaryStorage} = require('multer-storage-cloudinary')
-
+console.clear()
 const localStrategy = require('passport-local').Strategy
 
 dotenv.config()
@@ -84,15 +88,15 @@ passport.use('voter',new localStrategy(async (username,password,done)=>{
 }))
 function isLoggedInV(req,res,next){
     if(req.isAuthenticated()){
-        console.log("ATHE")
+        // console.log("ATHE")
         if(req.user instanceof Voter){
-            console.log('nisud')
+            // console.log('nisud')
             return next()
         }else if(req.user instanceof Admin){
             res.redirect('/admin-dashboard')
         }
     }
-    console.log("wa ka sud")
+    // console.log("wa ka sud")
     res.redirect('/voters-login')
 }
 function isLoggedOutV(req,res,next){
@@ -163,15 +167,99 @@ app.get('/voters-login',isLoggedOutV,(req,res)=>{
 app.get('/voters-registration',isLoggedOutV,(req,res)=>{
     res.render("voter/register")
 })
-// app.post('/voters-registration',(req,res)=>{
-//     res.send(req.body)
-// })
-app.get('/voters-dashboard',isLoggedInV,(req,res)=>{
+app.get('/voters-candidates/GeneralElection',isLoggedInV,async(req,res)=>{
     const user = req.user
-    res.render('voter/dashboard',{user})
+    const votingFor = "General Election"
+    const data = await General.find({})
+    let executive = []
+    let representative = []
+    const check = true
+    let array = []
+    for(let i=0; i<data.length; i++){
+        if(data[i].executive==='Representative'){
+           representative.push(data[i])
+        }else if(data[i].executive==='Execom'){
+            executive.push(data[i])
+        }
+    }
+    res.render('voter/eventtlist',{user,votingFor,executive,representative,check,data})
 })
-app.get('/voters-execom',isLoggedInV,(req,res)=>{
-    res.render('voter/execom')
+app.get('/voters-candidates/DepartmentalElection',isLoggedInV,async(req,res)=>{
+    const user = req.user
+    const check = false
+    const votingFor = "Departmental Election"
+    const data = await Department.find({})
+    let array = []
+    // for(let i=0; i<data.length; i++){
+    //     if(data[i].event===votingFor){
+    //         array.push(data[i])
+    //     }
+    // }
+    res.render('voter/eventlist',{user,votingFor,array,check,data})
+})
+app.get('/voters-dashboard',isLoggedInV,async(req,res)=>{
+    const user = req.user
+    const department = await Department.find({})
+    const general = await General.find({})
+    res.render('voter/dashboard',{user,department,general})
+})
+app.get('/voters-general-execom',isLoggedInV,async(req,res)=>{
+    const user = req.user
+    const data = await General.find({})
+    let execom = []
+    let representative = []
+    for(let i=0; i<data.length; i++){
+        if(data[i].executive==='Execom'){
+            execom.push(data[i])
+        }else if(data[i].executive==='Representative'){
+            representative.push(data[i])
+        }
+    }
+    res.render('voter/execom',{data,execom,representative,user})
+})
+app.get('/voters-general-representative',isLoggedInV,async(req,res)=>{
+    const user = req.user
+    
+})
+app.get('/voters-departmental',isLoggedInV,async(req,res)=>{
+    const user = req.user  
+    
+
+})
+app.post('/cast-vote-execom',async(req,res)=>{
+    const {president,vicepresident,secgeneral} = req.body
+    let voteArray = []
+    voteArray.push(president)
+    voteArray.push(vicepresident)
+    voteArray.push(secgeneral)
+    const data = await General.find({})
+    let id,voteCount
+    
+    
+    for(let i=0; i<data.length; i++){
+        for(let j=0;j<voteArray.length;j++){
+            if(`${data[i].firstName}${data[i].lastName} ${data[i].position} ${data[i].party}`===voteArray[j]){
+                id = data[i]._id
+                voteCount = data[i].voteCount
+                voteCount++
+                General.findOneAndUpdate({_id:id},{voteCount}).then(data=>{console.log()})
+                const arrObject = [{
+                    firstName: data[i].firstName,
+                    lastName:data[i].lastName,
+                    party:data[i].party,
+                    position:data[i].position,
+                    imgUrl:data[i].imgUrl
+                }]
+                UserVote.findOneAndUpdate({_id:req.user._id},
+                    {$push:{execom: arrObject}}).then(data=>console.log('yay'))
+            }
+        }
+        
+    }
+    Voter.findOneAndUpdate({_id:req.user._id},{exeComHasV:true}).then(()=>{})
+   
+    res.redirect('/voters-dashboard')
+    // res.send(voteArray)
 })
 app.post('/voters-login',passport.authenticate('voter',{
     successRedirect: '/voters-dashboard',
@@ -182,7 +270,16 @@ app.get('/logoutVoter',(req,res)=>{
     req.logOut()
     res.redirect('/voters-login')
 })
+app.get('/my-execom',isLoggedInV,async(req,res)=>{
+    const id = req.user._id
+    // console.log(id)
+    const user = req.user
+    const data = await UserVote.findById(id)
+    // console.log(data)
+    res.render('voter/myexecom',{user,data})
+})
 app.post('/voters-registration',(req,res)=>{
+   
     Voter.findOne({username:req.body.username},(err,user)=>{
         if(user){
             req.flash('error','Username already taken')
@@ -202,11 +299,17 @@ app.post('/voters-registration',(req,res)=>{
                         emailAddress:req.body.emailAddress,
                         contactNumber:req.body.contactNumber,
                         gender:req.body.gender,
+                        department:req.body.department,
                         password:hash,
                         imgUrl:"https://res.cloudinary.com/dhqqwdevm/image/upload/v1631383900/DEV/defaultmale_xwnrss.jpg"
 
                     })
-                    await newUser.save().then(()=>{})
+                    await newUser.save().then((data)=>{
+                        const userVoteLogs = new UserVote({
+                            _id:data._id
+                        })
+                        userVoteLogs.save().then(()=>{})
+                    })
                     res.redirect('/voters-login')
                 })
                 
@@ -264,72 +367,140 @@ app.get('/logoutAdmin',(req,res)=>{
 app.get('/registered-candidates/GeneralElection',isLoggedInA,async(req,res)=>{
     const user = req.user
     const votingFor = "General Election"
-    const data = await Candidate.find({})
+    const data = await General.find({})
+    let executive = []
+    let representative = []
+    const check = true
     let array = []
     for(let i=0; i<data.length; i++){
-        if(data[i].event===votingFor){
-            array.push(data[i])
+        if(data[i].executive==='Representative'){
+           representative.push(data[i])
+        }else if(data[i].executive==='Execom'){
+            executive.push(data[i])
         }
     }
-    res.render('adminn/eventlist',{user,votingFor,array})
+    res.render('adminn/eventlist',{user,votingFor,executive,representative,check,data})
 })
 app.get('/registered-candidates/DepartmentalElection',isLoggedInA,async(req,res)=>{
     const user = req.user
+    const check = false
     const votingFor = "Departmental Election"
-    const data = await Candidate.find({})
+    const data = await Department.find({})
     let array = []
-    for(let i=0; i<data.length; i++){
-        if(data[i].event===votingFor){
-            array.push(data[i])
-        }
-    }
-    res.render('adminn/eventlist',{user,votingFor,array})
+    // for(let i=0; i<data.length; i++){
+    //     if(data[i].event===votingFor){
+    //         array.push(data[i])
+    //     }
+    // }
+    res.render('adminn/eventlist',{user,votingFor,array,check,data})
 })
 app.get('/admin-dashboard',isLoggedInA,async(req,res)=>{
     const user = req.user
-    const data = await Candidate.find({})
-    let departmental = []
-    let general = []
-    for(let i=0; i<data.length; i++){
-        if(data[i].event==='Departmental Election'){
-            departmental.push(data[i])
-        }else if(data[i].event==='General Election'){
-            general.push(data[i])
-        }
-    }
-    // console.log(departmental)
-    // console.log(data)
-    res.render("adminn/dashboard",{user,departmental,general})
+    const department = await Department.find({})
+    const general = await General.find({})
+    res.render("adminn/dashboard",{user,department,general})
 })
 app.get('/admin-add-candidates',isLoggedInA,(req,res)=>{
-    res.render('adminn/addcandidate')
+    const user = req.user
+    res.render('adminn/addcandidate',{user})
 })
 app.post('/admin-add-candidate',upload.single('img'),async(req,res)=>{
-    let addCandidate
-    if(req.file){
-         addCandidate = new Candidate({
-            firstName:req.body.firstName,
-           lastName:req.body.lastName,
-           position:req.body.position,
-           party:req.body.party,
-           courseYear: req.body.course,
-           event:req.body.event,
-           schoolTerm:req.body.schoolyear,
-           imgUrl: req.file.path
-          })
-        
-    }else{
-          addCandidate = new Candidate({
-          firstName:req.body.firstName,
-           lastName:req.body.lastName,
-           position:req.body.position,
-           party:req.body.party,
-           courseYear: req.body.course,
-           event:req.body.event,
-           schoolTerm:req.body.schoolyear,
-           imgUrl:"https://res.cloudinary.com/dhqqwdevm/image/upload/v1631383900/DEV/defaultmale_xwnrss.jpg"
-    })
+    // res.send(req.body.executive)
+    if(req.body.event === 'General Election'){
+        let general
+        if(req.body.executive === 'Representative'){
+            if(req.file){
+                general = new General({
+                    firstName:req.body.firstName,
+                    lastName:req.body.lastName,
+                    position:req.body.position,
+                    department:req.body.department,
+                    event:req.body.event,
+                    executive:req.body.executive,
+                    schoolTerm:req.body.schoolyear,
+                    imgUrl: req.file.path,
+                    voteCount:0,
+                    party:req.body.party
+                })
+            }else{
+                general = new General({
+                    firstName:req.body.firstName,
+                    lastName:req.body.lastName,
+                    position:req.body.position,
+                    department:req.body.department,
+                    executive:req.body.executive,
+                    event:req.body.event,
+                    schoolTerm:req.body.schoolyear,
+                    voteCount:0,
+                    imgUrl: "https://res.cloudinary.com/dhqqwdevm/image/upload/v1631383900/DEV/defaultmale_xwnrss.jpg",
+                    party:req.body.party
+                })
+                
+            }
+
+        }else if(req.body.executive === 'Execom'){
+            if(req.file){
+                general = new General({
+                    firstName:req.body.firstName,
+                    lastName:req.body.lastName,
+                    position:req.body.position,
+                    event:req.body.event,
+                    executive:req.body.executive,
+                    voteCount:0,
+                    // department:req.body.department,
+                    schoolTerm:req.body.schoolyear,
+                    imgUrl: req.file.path,
+                    party:req.body.party
+                })
+            }else{
+                general = new General({
+                    firstName:req.body.firstName,
+                    lastName:req.body.lastName,
+                    position:req.body.position,
+                    executive:req.body.executive,
+                    event:req.body.event,
+                    voteCount:0,
+                    // department:req.body.department,
+                    schoolTerm:req.body.schoolyear,
+                    imgUrl: "https://res.cloudinary.com/dhqqwdevm/image/upload/v1631383900/DEV/defaultmale_xwnrss.jpg",
+                    party:req.body.party
+                })
+                
+            }
+        }
+        await general.save().then(()=>{})
+    }else if(req.body.event ==='Departmental Election'){
+        // console.log(req.body.department)
+        let department 
+        if(req.file){
+            department = new Department({
+                firstName:req.body.firstName,
+                lastName:req.body.lastName,
+                position:req.body.position,
+                department:req.body.department,
+                event:req.body.event,
+                schoolTerm:req.body.schoolyear,
+                imgUrl: req.file.path,
+                voteCount:0,
+                party:req.body.party
+            })
+        }else{
+            department = new Department({
+                firstName:req.body.firstName,
+                lastName:req.body.lastName,
+                position:req.body.position,
+                department:req.body.department,
+                executive:req.body.executive,
+                event:req.body.event,
+                schoolTerm:req.body.schoolyear,
+                voteCount:0,
+                imgUrl: "https://res.cloudinary.com/dhqqwdevm/image/upload/v1631383900/DEV/defaultmale_xwnrss.jpg",
+                party:req.body.party
+            })
+            
+        }
+        await department.save().then(()=>{})
     }
-    await addCandidate.save().then(()=>{})
+  
     res.redirect('/admin-add-candidates')
 })

@@ -16,6 +16,21 @@
         margin: 0 auto;
         cursor: pointer;
     }
+    .hide{
+        display: none;
+    }
+    .general-execom{
+        display: none;
+    }
+    .departmental{
+        display: none;
+    }
+    .repre{
+        display: none;
+    }
+    .hide-2{
+        display: none;
+    }
     .left-content{
         display: flex;
         flex-direction: column;
@@ -35,7 +50,7 @@
     .user-name{
         text-decoration: none;
     }
-    .dataTable > thead > tr > th[class*=sort]:after{ display:none; }
+    
     .targetz{
         background-color: rgb(13, 110, 253);
     }
@@ -49,14 +64,7 @@
         height: 30px;
         border-radius: 50%;
     }
-    table.dataTable thead .sorting:after,
-    table.dataTable thead .sorting_asc:after,
-    table.dataTable thead .sorting_desc:after,
-    table.dataTable thead .sorting:before,
-    table.dataTable thead .sorting_asc:before,
-    table.dataTable thead .sorting_desc:before {
-        display: none;
-    }
+ 
     @media (max-width: 376px){
         body{
             background-color: pink;
@@ -129,8 +137,8 @@
                 </div>
                 <div class="sb-sidenav-footer py-2">
                     <div class="small">Logged in as:</div>
-                    <img src="" alt="" class="test2">
-                   daxu
+                    <img src="<%=user.imgUrl%> " alt="" class="test2">
+                    <%= user.name %> 
                 </div>
             </nav>
         </div>
@@ -148,7 +156,7 @@
                                         <div class="left-content mt-5">
                                             <img src="https://res.cloudinary.com/dhqqwdevm/image/upload/v1631383900/DEV/defaultmale_xwnrss.jpg" alt="#" class="imagez" onclick="changePic()">
                                             <input type="file" name="img" id="img" style="display: none;"  class="form-control" accept="image/png, image/jpeg, image/gif,image/jpg">
-                                            <a href="#" class="text-center mt-2" onclick="changePic()">Edit Picture</a>  
+                                            <a href="#" class="text-center mt-2" onclick="changePic()">Add Picture</a>  
                                         </div>
                                          
                                     </div>
@@ -162,28 +170,73 @@
                                                 <label for="lastName" class="form-label mt-4">Last Name</label>
                                                 <input type="text" name="lastName" id="lastName" class="form-control"  required placeholder="Last Name">
                                             </div>
-                                            <div class="col-md-6">
-                                                <label for="position" class="form-label mt-3">Position</label>
-                                                <input type="text" name="position" id="position" class="form-control" required placeholder="Position">
+                                            <div class="col-md-6 second-row repre">
+                                                <label class="form-label mt-3" for="position">Position</label>
+                                                <input type="text" name="position" id="position" value="Department Representative" disabled class="form-control">
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-6 second-row general-execom">
+                                                <label class="form-label mt-3" for="position">Position</label>
+                                                <select disabled id="position" name="position" class="form-select" aria-label="Default select example">
+                                                    <option value="" selected disabled hidden>Select Position</option>
+                                                    <option value="President">President</option>
+                                                    <option value="Vice-President">Vice-President</option>
+                                                    <option value="Secretary-General">Secretary-General</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6 second-row departmental">
+                                                <label class="form-label mt-3" for="position">Position</label>
+                                                <select id="position" name="position" class="form-select" aria-label="Default select example">
+                                                    <option value="" selected disabled hidden>Select Position</option>
+                                                    <option value="President">President</option>
+                                                    <option value="Vice-President">Vice-President</option>
+                                                    <option value="Secretary">Secretary</option>
+                                                    <option value="Treasurer">Treasurer</option>
+                                                    <option value="PIO">PIO</option>
+                                                    <option value="Auditor">Auditor</option>
+                                                    <option value="PRO">PRO</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6 second-row">
                                                 <label class="form-label mt-3" for="event">Event</label>
                                                 <select required id="event" name="event" class="form-select" aria-label="Default select example">
-                                                    <option  value="" selected disabled hidden>Select Event</option>
+                                                    <option value="" selected disabled hidden>Select Event</option>
                                                     <option value="General Election">General Election</option>
                                                     <option value="Departmental Election">Departmental Election</option>
                                                     <option value="Others">Others</option>
                                                 </select>
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-md-4 hide">
+                                                <label class="form-label mt-3" for="executive">Executive</label>
+                                                <select id="executive" name="executive" class="form-select" aria-label="Default select example">
+                                                    <option value="" selected disabled hidden>Select Executive</option>
+                                                    <option value="Execom">Execom</option>
+                                                    <option value="Representative">Representative</option>
+                                                    
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6 third-row">
                                                 <label for="party" class="form-label mt-3">Party</label>
-                                                <input type="text" name="party" id="party" class="form-control" required placeholder="Party">
+                                                <select id="party" name="party" class="form-select" aria-label="Default select example">
+                                                    <option  value="" selected disabled hidden>Select Party</option>
+                                                    <option value="united">UNITED</option>
+                                                    <option value="save">SAVE</option>
+                                                    
+                                                </select>
                                             </div>
-                                            <div class="col-md-4">
-                                                <label for="course" class="form-label mt-3">Course & Year</label>
-                                                <input type="text" name="course" id="course" class="form-control" required placeholder="Course & Year">
+                                            <div class="col-md-4 hide-2">
+                                                <label class="form-label mt-3" for="department">Departments</label>
+                                                <select id="department" name="department" class="form-select" aria-label="Default select example">
+                                                    <option value="" selected disabled hidden>Select Department</option>
+                                                    <option value="College of Management, Business, and Accountancy">College of Management, Business, and Accountancy</option>
+                                                    <option value="College of Nursing and Allied Health Sciences">College of Nursing and Allied Health Sciences</option>
+                                                    <option value="College of Engineering And Architecture">College of Engineering And Architecture</option>
+                                                    <option value="College of Arts, Sciences and Education">College of Arts, Sciences and Education</option>
+                                                    <option value="College of Computer Studies">College of Computer Studies</option>
+                                                    <option value="College of Criminal Justice">College of Criminal Justice</option>
+                                                    
+                                                </select>
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-md-6 third-row">
                                                 <label class="form-label mt-3" for="schoolyear">School Year</label>
                                                 <select required id="schoolyear" name="schoolyear" class="form-select" aria-label="Default select example">
                                                     <option  value="" selected disabled hidden>School Year</option>
@@ -195,14 +248,16 @@
                                         </div>
                                     </div>
                                 </div>
+                                
                                 <div class="row">
                                                                
                                     <hr class="mt-5">
                                 </div>
-                                <div class="row d-flex">
+                                
+                                <div class="row">
                                     <div>
                                         <button class="btn btn-warning">Add Candidate</button>
-                                        <!-- <button class="btn btn-danger">Register Candidate</button> -->
+                                        
                                     </div>
                                 </div>
                             </form>
@@ -212,9 +267,7 @@
                 </div>
 
             </main>
-            <footer class="py-4 bg-light mt-3">
-               
-            </footer>
+            
         </div>
     </div>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.js"></script>
@@ -255,7 +308,86 @@
             }
         }
     </script>
+    <script>
+        const eve = document.querySelector('#event')
+        const hide = document.querySelector('.hide')
+        const secondRow = document.querySelectorAll('.second-row')
+        const exe = document.querySelector('#executive')
+        const hide2 = document.querySelector('.hide-2')
+        const thirdRow = document.querySelectorAll('.third-row')
+        const pos1 = document.querySelector('.general-execom')
+        const pos2 = document.querySelector('.repre')
+        const pos3 = document.querySelector('.departmental')
+        setInterval(()=>{
+            if(eve.value==='General Election'){
+                hide.classList.remove('hide')
+                pos3.classList.add('departmental')
+                for(let i=0; i<secondRow.length; i++){
+                    secondRow[i].classList.remove('col-md-6')
+                }
+                for(let i=0; i<secondRow.length; i++){
+                    secondRow[i].classList.add('col-md-4')
+                }
+                hide.children[1].required = true
+            }else if(eve.value==='Departmental Election'){
+                hide.classList.add('hide')
+                pos1.classList.add('general-execom')
+                pos3.classList.remove('departmental')
+                for(let i=0; i<secondRow.length; i++){
+                    secondRow[i].classList.add('col-md-6')
+                }
+                for(let i=0; i<secondRow.length; i++){
+                    secondRow[i].classList.remove('col-md-4')
+                }
+                hide.children[1].required = false
+            }
+        },1000)
+        setInterval(()=>{
+            if(eve.value==='General Election'){
+                pos3.classList.remove('departmental')
+                if(exe.value==='Representative'){
+                    hide2.classList.remove('hide-2')
+                    pos2.classList.remove('repre')
+                    pos3.classList.add('departmental')
+                    pos1.classList.add('general-execom')
+                    pos1.children[1].disabled = true
+                    for(let i=0;i<thirdRow.length; i++){
+                        thirdRow[i].classList.remove('col-md-6')
+                    }
+                    for(let i=0;i<thirdRow.length; i++){
+                        
+                        thirdRow[i].classList.add('col-md-4')
+                    }
+                }
+                else{
+                    pos3.classList.add('departmental')
+                    pos1.classList.remove('general-execom')
+                    pos2.classList.add('repre')
+                    hide2.classList.add('hide-2')
+                    pos1.children[1].disabled = false
+                    for(let i=0;i<thirdRow.length; i++){
+                        thirdRow[i].classList.add('col-md-6')
+                    }
+                    for(let i=0;i<thirdRow.length; i++){
+                        thirdRow[i].classList.remove('col-md-4')
+                    }
 
+                }
+                hide2.children[1].required = false
+            }else if(eve.value==='Departmental Election'){
+                hide2.classList.remove('hide-2')
+                pos2.classList.add('repre')
+                for(let i=0;i<thirdRow.length; i++){
+                        thirdRow[i].classList.remove('col-md-6')
+                }
+                for(let i=0;i<thirdRow.length; i++){
+                        thirdRow[i].classList.add('col-md-4')
+                }
+                hide2.children[1].required = true
+            }
+            
+        },1000)
+    </script>
 </body>
 </html>
 

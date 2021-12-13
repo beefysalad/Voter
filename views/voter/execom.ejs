@@ -44,6 +44,41 @@
         text-decoration: none;
         cursor: pointer;
     }
+    .picture-holder{
+      border-radius: 50%;
+      width: 350px;
+      height: 350px;
+      margin: 0 auto;
+      transition: 0.25s;
+    }
+    .picture-holder:hover{
+      transform: translateY(-0.25em);
+    }
+    .left-content-body{
+      /* margin: 0 auto; */
+      display: flex;
+      flex-direction: column;
+      border: 1px solid gainsboro;
+      padding: 35px;
+      
+    }
+    .right-content-body{
+      display: flex;
+      flex-direction: column;
+      border: 1px solid gainsboro;
+      padding: 35px;
+      /* background-color: blue; */
+      /* background-color: blue; */
+    }
+    .rc{
+      margin: 0 auto;
+    }
+    .form-vote{
+      margin: 0 auto;
+    }
+    .center-button{
+      margin: 0 auto;
+    }
     div.dataTables_wrapper {
             width: inherit;
             margin: 0 auto;
@@ -103,13 +138,16 @@ crossorigin=""></script>
           <!-- Collapsed content -->
           <ul id="collapseExample1" class="collapse show list-group list-group-flush">
             <li class="list-group-item py-1">
-              <a href="../FrontEnd/VoterExe.html" class="text-reset">EXECOM's</a>
+              <a href="#" class="text-reset">EXECOM</a>
             </li>
             <li class="list-group-item py-1">
-                <a href="/client-dashboard" class="text-reset">REPRESENTATIVE's</a>
+                <a href="#" class="text-reset">REPRESENTATIVE</a>
             </li>
             <li class="list-group-item py-1">
-                <a href="/client-dashboard" class="text-reset">OTHER's</a>
+              <a href="#" class="text-reset">DEPARTMENTAL</a>
+          </li>
+            <li class="list-group-item py-1">
+                <a href="#" class="text-reset">OTHER</a>
             </li>
           </ul>
           <!-- Collapse 1 -->
@@ -128,13 +166,13 @@ crossorigin=""></script>
           <!-- Collapsed content -->
           <ul id="collapseExample2" class="collapse list-group list-group-flush">
             <li class="list-group-item py-2">
-                <a href="/client-profile" class="text-reset">EXECOM's</a>
+                <a href="/my-execom" class="text-reset">EXECOM's</a>
             </li>
             <li class="list-group-item py-2">
-                <a href="/client-profile/edit" class="text-reset">REPRESENTATIVE's</a>
+                <a href="#" class="text-reset">REPRESENTATIVE's</a>
             </li>
             <li class="list-group-item py-2">
-                <a href="/client-new-qr-code" class="text-reset">OTHER's</a>
+                <a href="#" class="text-reset">OTHER's</a>
             </li>
             
           </ul>
@@ -163,43 +201,15 @@ crossorigin=""></script>
           <i class="fas fa-bars"></i>
         </button>
   
-        <!-- Brand -->
+        
         <a class="navbar-brand" href="#">
             WELCOME!
-          <!-- <img
-            src="https://mdbootstrap.com/img/logo/mdb-transaprent-noshadows.png"
-            height="25"
-            alt=""
-            loading="lazy"
-          /> -->
+         
         </a>
       
-        <!-- Right links -->
+        
         <ul class="navbar-nav ms-auto d-flex flex-row">
-          <!-- Notification dropdown -->
-          <li class="nav-item dropdown">
-            <a
-              class="nav-link me-3 me-lg-0 dropdown-toggle hidden-arrow"
-              href="#"
-              id="navbarDropdownMenuLink"
-              role="button"
-              data-mdb-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <i class="fas fa-bell fa-2x"></i>
-            1
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
-              tabs gage
-            </ul>
-          </li>
-          <!-- Icon -->
-          <!-- <li class="nav-item me-3 me-lg-0">
-            <a class="nav-link" href="#">
-              <i class="fab fa-github fa-2x"></i>
-            </a>
-          </li> -->
-          <!-- Avatar -->
+          
           <li class="nav-item dropdown">
             <a
               class="nav-link dropdown-toggle hidden-arrow d-flex align-items-center"
@@ -210,7 +220,7 @@ crossorigin=""></script>
               aria-expanded="false"
             >
               <img
-                src=""
+                src="<%= user.imgUrl %> "
                 class="rounded-circle"
                 height="30"
                 width="30"
@@ -222,10 +232,10 @@ crossorigin=""></script>
               class="dropdown-menu dropdown-menu-end"
               aria-labelledby="navbarDropdownMenuLink"
             >
-              <li class="account-settings"><a class="dropdown-item" href="#">Daxu banana</a></li>
+              <li class="account-settings"><a class="dropdown-item" href="#"><%=user.firstName%> <%= user.lastName %> </a></li>
            <!--   <li class="account-settings"><a class="dropdown-item" href="/client-map-location">My Location</a></li>
               <li class="account-settings"><a class="dropdown-item" href="/client-profile">My profile</a></li> -->
-              <li class="account-settings"><a class="dropdown-item" href="#">Logout</a></li>
+              <li class="account-settings"><a class="dropdown-item" href="/logoutVoter">Logout</a></li>
             </ul>
           </li>
         </ul>
@@ -240,7 +250,217 @@ crossorigin=""></script>
         <li class="breadcrumb-item active" aria-current="page">VOTE WISELY</li>
       </ol>
     <hr style="margin-top: 5px;">
-    <p style="display: none;" class="api_key"></p>
+    <div class="container pt4">
+      <div class="card mt-2">
+        <div class="card-header bg-dark text-white">
+            Candidates
+        </div>
+      </div>
+      <div class="card-body">
+        <!-- <p class="text-center">PRESIDENT</p> -->
+        <form action="/cast-vote-execom" method="POST">
+          <div class="row mt-5">
+          
+            <div class="col-md-6 lc">
+              <div class="left-content-body">
+                <!-- <p class="text-center">SAVE</p> -->
+                <% if (execom.length!=0) { %>
+                  <% for( let index = 0; index < execom.length; index++ ) { %>
+                    <% if (execom[index].position === 'President' && execom[index].party ==='save') { %>
+                      <img class="picture-holder" src="<%=execom[index].imgUrl%> " alt="">
+                      <hr>
+                      <p class="form-label text-center card-para">Name: <%=execom[index].firstName%> <%=execom[index].lastName%></p>
+                      <p class="form-label text-center card-para">Party: <%=execom[index].party%></p>
+                      <p class="form-label text-center card-para">Position: <%=execom[index].position%></p>
+                      <p class="text-center form-label">Cast Vote</p>
+                      <!-- <hr> -->
+                      <div class="form-check form-vote">
+                        <% if (user.exeComHasV) { %>
+                          <input disabled class="form-check-input" type="radio" name="president" id="president" value="<%=execom[index].firstName%><%=execom[index].lastName%> <%=execom[index].position%> <%= execom[index].party%>">
+                        <% } else {%>
+                          <input class="form-check-input" type="radio" name="president" id="president" value="<%=execom[index].firstName%><%=execom[index].lastName%> <%=execom[index].position%> <%= execom[index].party%>">
+                        <% } %>
+                        <label class="form-check-label" for="president">
+                          <!-- Cast Vote -->
+                        </label>
+                      </div>
+                    <% } %>
+              <% } %>
+                <% } %>
+                
+                
+              </div>
+            </div>
+            <div class="col-md-6 rc">
+              <div class="right-content-body">
+                <!-- <p class="text-center">UNITED</p> -->
+                <% if (execom.length!=0) { %>
+                  <% for( let index = 0; index < execom.length; index++ ) { %>
+                    <% if (execom[index].position === 'President' && execom[index].party ==='united') { %>
+                      
+                        <img class="picture-holder" src="<%=execom[index].imgUrl%> " alt="">
+                        <hr>
+                        <p class="form-label text-center card-para">Name: <%=execom[index].firstName%> <%=execom[index].lastName%></p>
+                      <p class="form-label text-center card-para">Party: <%=execom[index].party%></p>
+                      <p class="form-label text-center card-para">Position: <%=execom[index].position%></p>
+                      <p class="text-center form-label">Cast Vote</p>
+                      <div class="form-check form-vote">
+                        <% if (user.exeComHasV) { %>
+                          <input disabled class="form-check-input" type="radio" name="president" id="president" value="<%=execom[index].firstName%><%=execom[index].lastName%> <%=execom[index].position%> <%= execom[index].party%>">
+                        <% } else {%>
+                          <input class="form-check-input" type="radio" name="president" id="president" value="<%=execom[index].firstName%><%=execom[index].lastName%> <%=execom[index].position%> <%= execom[index].party%>">
+                        <% } %>
+                        <!-- <label class="form-check-label" for="president">
+                          Cast Vote
+                        </label> -->
+                      </div>
+                    <% } %>
+                <% } %>
+                <% } %>
+                
+              
+            </div>
+            </div>
+          </div>
+          <div class="row mt-5">
+          
+            <div class="col-md-6 lc">
+              <div class="left-content-body">
+                <!-- <p class="text-center">SAVE</p> -->
+                <% if (execom.length!=0) { %>
+                  <% for( let index = 0; index < execom.length; index++ ) { %>
+                    <% if (execom[index].position === 'Vice-President' && execom[index].party ==='save') { %>
+                      <img class="picture-holder" src="<%=execom[index].imgUrl%> " alt="">
+                      <hr>
+                      <p class="form-label text-center card-para">Name: <%=execom[index].firstName%> <%=execom[index].lastName%></p>
+                      <p class="form-label text-center card-para">Party: <%=execom[index].party%></p>
+                      <p class="form-label text-center card-para">Position: <%=execom[index].position%></p>
+                      <p class="text-center form-label">Cast Vote</p>
+                      <div class="form-check form-vote">
+                        <% if (user.exeComHasV) { %>
+                          <input disabled class="form-check-input" type="radio" name="vicepresident" id="vicepresident" value="<%=execom[index].firstName%><%=execom[index].lastName%> <%=execom[index].position%> <%= execom[index].party%>">
+                        <% } else {%>
+                          <input class="form-check-input" type="radio" name="vicepresident" id="vicepresident" value="<%=execom[index].firstName%><%=execom[index].lastName%> <%=execom[index].position%> <%= execom[index].party%>">
+                        <% } %>
+                        <label class="form-check-label" for="vicepresident">
+                          <!-- Cast Vote -->
+                        </label>
+                      </div>
+                    <% } %>
+              <% } %>
+                <% } %>
+                
+                
+              </div>
+            </div>
+            <div class="col-md-6 rc">
+              <div class="right-content-body">
+                <!-- <p class="text-center">UNITED</p> -->
+                <% if (execom.length!=0) { %>
+                  <% for( let index = 0; index < execom.length; index++ ) { %>
+                    <% if (execom[index].position === 'Vice-President' && execom[index].party ==='united') { %>
+                      
+                        <img class="picture-holder" src="<%=execom[index].imgUrl%> " alt="">
+                        <hr>
+                        <p class="form-label text-center card-para">Name: <%=execom[index].firstName%> <%=execom[index].lastName%></p>
+                        <p class="form-label text-center card-para">Party: <%=execom[index].party%></p>
+                        <p class="form-label text-center card-para">Position: <%=execom[index].position%></p>
+                        <p class="text-center form-label">Cast Vote</p>
+                        <div class="form-check form-vote">
+                          <% if (user.exeComHasV) { %>
+                            <input disabled class="form-check-input" type="radio" name="vicepresident" id="vicepresident" value="<%=execom[index].firstName%><%=execom[index].lastName%> <%=execom[index].position%> <%= execom[index].party%>">
+                          <% } else {%>
+                            <input class="form-check-input" type="radio" name="vicepresident" id="vicepresident" value="<%=execom[index].firstName%><%=execom[index].lastName%> <%=execom[index].position%> <%= execom[index].party%>">
+                          <% } %>
+                          <label class="form-check-label" for="vicepresident">
+                            <!-- Cast Vote -->
+                          </label>
+                        </div>
+                    <% } %>
+                <% } %>
+                <% } %>
+                
+              
+            </div>
+            </div>
+          </div>
+          <div class="row mt-5">
+          
+            <div class="col-md-6 lc">
+              <div class="left-content-body">
+                <!-- <p class="text-center">SAVE</p> -->
+                <% if (execom.length!=0) { %>
+                  <% for( let index = 0; index < execom.length; index++ ) { %>
+                    <% if (execom[index].position === 'Secretary-General' && execom[index].party ==='save') { %>
+                      <img class="picture-holder" src="<%=execom[index].imgUrl%> " alt="">
+                      <hr>
+                      <p class="form-label text-center card-para">Name: <%=execom[index].firstName%> <%=execom[index].lastName%></p>
+                      <p class="form-label text-center card-para">Party: <%=execom[index].party%></p>
+                      <p class="form-label text-center card-para">Position: <%=execom[index].position%></p>
+                      <p class="text-center form-label">Cast Vote</p>
+                      <div class="form-check form-vote">
+                        <% if (user.exeComHasV) { %>
+                          <input disabled class="form-check-input" type="radio" name="secgeneral" id="secgeneral" value="<%=execom[index].firstName%><%=execom[index].lastName%> <%=execom[index].position%> <%= execom[index].party%>">
+                        <% } else {%>
+                          <input class="form-check-input" type="radio" name="secgeneral" id="secgeneral" value="<%=execom[index].firstName%><%=execom[index].lastName%> <%=execom[index].position%> <%= execom[index].party%>">
+                        <% } %>
+                        
+                        <label class="form-check-label" for="secgeneral">
+                          <!-- Cast Vote -->
+                        </label>
+                      </div>
+                    <% } %>
+              <% } %>
+                <% } %>
+                
+                
+              </div>
+            </div>
+            <div class="col-md-6 rc">
+              <div class="right-content-body">
+                <!-- <p class="text-center">UNITED</p> -->
+                <% if (execom.length!=0) { %>
+                  <% for( let index = 0; index < execom.length; index++ ) { %>
+                    <% if (execom[index].position === 'Secretary-General' && execom[index].party ==='united') { %>
+                      
+                        <img class="picture-holder" src="<%=execom[index].imgUrl%> " alt="">
+                        <hr>
+                        <p class="form-label text-center card-para">Name: <%=execom[index].firstName%> <%=execom[index].lastName%></p>
+                        <p class="form-label text-center card-para">Party: <%=execom[index].party%></p>
+                        <p class="form-label text-center card-para">Position: <%=execom[index].position%></p>
+                        <p class="text-center form-label">Cast Vote</p>
+                        <div class="form-check form-vote">
+                          <% if (user.exeComHasV) { %>
+                            <input disabled class="form-check-input" type="radio" name="secgeneral" id="secgeneral" value="<%=execom[index].firstName%><%=execom[index].lastName%> <%=execom[index].position%> <%= execom[index].party%>">
+                          <% } else {%>
+                            <input class="form-check-input" type="radio" name="secgeneral" id="secgeneral" value="<%=execom[index].firstName%><%=execom[index].lastName%> <%=execom[index].position%> <%= execom[index].party%>">
+                          <% } %>
+                          <label class="form-check-label" for="secgeneral">
+                            <!-- Cast Vote -->
+                          </label>
+                        </div>
+                    <% } %>
+                <% } %>
+                <% } %>
+                
+              
+            </div>
+            </div>
+            
+          </div>
+          <hr>
+          <div class="container">
+            <div class="row">
+              <button class="btn-dark btn">Submit Vote</button>
+            </div>
+          </div>
+          
+        </form>
+        <!-- <button class="btn-warning btn mt-5">Next</button>  -->
+        
+        
+      </div>
+    </div>
   </main>
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.js"></script>

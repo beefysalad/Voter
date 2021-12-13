@@ -86,7 +86,7 @@
                             <div class="sb-nav-link-icon">
                                 <i class="fas fa-tachometer-alt"></i>
                             </div>
-                            Register Candidates
+                            <!-- Register Candidates -->
                         </a>
                         <div class="sb-sidenav-menu-heading">Coverage</div>
                         <div class="collapse" id="collapseLayoutz" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
@@ -95,7 +95,7 @@
                         </div>
                         <a target="_blank" class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayout3" aria-expanded="false" aria-controls="collapseLayout1">
                             <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                             Tally of Votes
+                             <!-- Tally of Votes -->
                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
                     </div>
@@ -197,7 +197,7 @@
                                 
                             </div>
                         </div>
-                        <a href="/admin-dashboard" class="btn btn-primary mt-5">Back</a>
+                        <a href="/voters-dashboard" class="btn btn-primary mt-5">Back</a>
                     </div>
                 <% } else { %>
                 <div class="container-fluid px-4">
@@ -222,7 +222,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                   <% if (data.length!=0) { %>
+                                   <% if (data) { %>
                                         <% for( let index = 0; index < data.length; index++ ) { %>
                                             <tr>
                                                 <td><%= index+1 %> </td>
@@ -239,7 +239,7 @@
                                     
                                 </tbody>
                             </table>
-                            <a href="/admin-dashboard" class="btn btn-primary mt-5">Back</a>
+                            <a href="/voters-dashboard" class="btn btn-primary mt-5">Back</a>
                         </div>
                     </div>
                     
