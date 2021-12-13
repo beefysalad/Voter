@@ -1,5 +1,5 @@
 const express = require('express')
-const port = 8080 || process.env.PORT
+const port = process.env.PORT || 8080
 const app = express()
 const path = require('path')
 const mongoose = require('mongoose')
