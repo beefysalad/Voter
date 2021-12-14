@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/ICON.ico">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <script src="/js/bootstrap.min.js"></script> 
+<title>Voter's Dashboard</title>
+<style>
+    .test{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        background-color: red;
+        max-width: 500px;
+        min-height: 500px;
+        width: 100%;
+        height: 100%;
+    }
+    .notify{
+        border-bottom: 1px solid gainsboro;
+    }
+    #map {
+        height: 300px; 
+        width: inherit;
+    }
+    .account-settings{
+        border-bottom: 1px solid gainsboro;
+    }
+    #modal-target{
+        max-width: 800px;
+
+    }
+    .center-content{
+        /* background-color: red; */
+        display: flex;
+        justify-content: center;
+    }
+    .geo{
+        background: none!important;
+        border: none;
+        padding: 0!important;
+        /*optional*/
+        
+        /*input has OS specific font-family*/
+        color: white;
+        text-decoration: none;
+        cursor: pointer;
+    }
+    .picture-holder{
+      border-radius: 50%;
+      width: 350px;
+      height: 350px;
+      margin: 0 auto;
+      transition: 0.25s;
+    }
+    .picture-holder:hover{
+      transform: translateY(-0.25em);
+    }
+    .left-content-body{
+      /* margin: 0 auto; */
+      display: flex;
+      flex-direction: column;
+      border: 1px solid gainsboro;
+      padding: 35px;
+      
+    }
+    .content{
+      display: flex;
+      flex-direction: column;
+      /* justify-content: center; */
+      border: 1px solid gainsboro;
+      padding: 45px;
+    }
+    .right-content-body{
+      display: flex;
+      flex-direction: column;
+      border: 1px solid gainsboro;
+      padding: 35px;
+      /* background-color: blue; */
+      /* background-color: blue; */
+    }
+    .rc{
+      margin: 0 auto;
+    }
+    .form-vote{
+      margin: 0 auto;
+    }
+    .center-button{
+      margin: 0 auto;
+    }
+    div.dataTables_wrapper {
+            width: inherit;
+            margin: 0 auto;
+        }
+    @media (max-width:452px) {
+        td{
+            font-size: 11px;
+        }
+        th{
+            font-size: 11px;
+        }
+        .main-content{
+            padding: 0;
+        }
+}
+</style>
+<link rel="stylesheet" href="/css/usersidebar.css">
+ <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" />
+ <!-- Google Fonts Roboto -->
+ <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" />
+ <!-- MDB -->
+ <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.css" rel="stylesheet"/>
+ <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+    crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+    crossorigin=""></script>
+<!-- Load Esri Leaflet from CDN -->
+<script src="https://unpkg.com/esri-leaflet@3.0.3/dist/esri-leaflet.js"
+integrity="sha512-kuYkbOFCV/SsxrpmaCRMEFmqU08n6vc+TfAVlIKjR1BPVgt75pmtU9nbQll+4M9PN2tmZSAgD1kGUCKL88CscA=="
+crossorigin=""></script>
+
+<!-- Load Esri Leaflet Geocoder from CDN -->
+<link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@3.1.1/dist/esri-leaflet-geocoder.css"
+integrity="sha512-IM3Hs+feyi40yZhDH6kV8vQMg4Fh20s9OzInIIAc4nx7aMYMfo+IenRUekoYsHZqGkREUgx0VvlEsgm7nCDW9g=="
+crossorigin="">
+<script src="https://unpkg.com/esri-leaflet-geocoder@3.1.1/dist/esri-leaflet-geocoder.js"
+integrity="sha512-enHceDibjfw6LYtgWU03hke20nVTm+X5CRi9ity06lGQNtC9GkBNl/6LoER6XzSudGiXy++avi1EbIg9Ip4L1w=="
+crossorigin=""></script>
+</head>
+<body>
+<header>
+    <!-- Sidebar -->
+    <nav id="sidebarMenu" class="collapse d-lg-block sidebar collapse">
+      <div class="position-sticky">
+        <div class="list-group list-group-flush mx-3 mt-4">
+          <!-- Collapse 1 -->
+          <a class="list-group-item list-group-item-action py-2 ripple"
+            aria-current="true"
+            data-mdb-toggle="collapse"
+            href="#collapseExample1"
+            aria-expanded="true"
+            aria-controls="collapseExample1">
+            <i class="fas fa-vote-yea fa-fw me-3"></i><span>Vote Now!</span>
+          </a>
+          <!-- Collapsed content -->
+          <ul id="collapseExample1" class="collapse show list-group list-group-flush">
+            <li class="list-group-item py-1">
+              <a href="/voters-general-execom" class="text-reset">EXECOM</a>
+            </li>
+            <li class="list-group-item py-1">
+                <a href="/voters-general-representative" class="text-reset">REPRESENTATIVE</a>
+            </li>
+            <li class="list-group-item py-1">
+              <a href="#" class="text-reset">DEPARTMENTAL</a>
+          </li>
+            <li class="list-group-item py-1">
+                <a href="#" class="text-reset">OTHER</a>
+            </li>
+          </ul>
+          <!-- Collapse 1 -->
+  
+          <!-- Collapse 2 -->
+          <a
+            class="list-group-item list-group-item-action py-2 ripple"
+            aria-current="true"
+            data-mdb-toggle="collapse"
+            href="#collapseExample2"
+            aria-expanded="true"
+            aria-controls="collapseExample2">
+            
+            <i class="fas fa-users fa-fw me-3"></i><span>My Candidates</span>
+          </a>
+          <!-- Collapsed content -->
+          <ul id="collapseExample2" class="collapse list-group list-group-flush">
+            <li class="list-group-item py-2">
+                <a href="/my-execom" class="text-reset">EXECOM</a>
+            </li>
+            <li class="list-group-item py-2">
+              <a href="/my-representative" class="text-reset">REPRESENTATIVE</a>
+          </li>
+            <li class="list-group-item py-2">
+                <a href="/my-departmentals" class="text-reset">DEPARTMENTAL</a>
+            </li>
+            <li class="list-group-item py-2">
+                <a href="#" class="text-reset">OTHER's</a>
+            </li>
+            
+          </ul>
+          <!-- Collapse 2 -->
+        </div>
+        
+      </div>
+     
+    </nav>
+    <!-- Sidebar -->
+  
+    <!-- Navbar -->
+    <nav id="main-navbar" class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <!-- Container wrapper -->
+      <div class="container-fluid">
+        <!-- Toggle button -->
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-mdb-toggle="collapse"
+          data-mdb-target="#sidebarMenu"
+          aria-controls="sidebarMenu"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <i class="fas fa-bars"></i>
+        </button>
+  
+        
+        <a class="navbar-brand" href="/voters-dashboard">
+            WELCOME!
+         
+        </a>
+      
+        
+        <ul class="navbar-nav ms-auto d-flex flex-row">
+          
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle hidden-arrow d-flex align-items-center"
+              href="#"
+              id="navbarDropdownMenuLink"
+              role="button"
+              data-mdb-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <img
+                src="<%= user.imgUrl %> "
+                class="rounded-circle"
+                height="30"
+                width="30"
+                alt=""
+                loading="lazy"
+              />
+            </a>
+            <ul
+              class="dropdown-menu dropdown-menu-end"
+              aria-labelledby="navbarDropdownMenuLink"
+            >
+              <li class="account-settings"><a class="dropdown-item" href="#"><%=user.firstName%> <%= user.lastName %> </a></li>
+           <!--   <li class="account-settings"><a class="dropdown-item" href="/client-map-location">My Location</a></li>
+              <li class="account-settings"><a class="dropdown-item" href="/client-profile">My profile</a></li> -->
+              <li class="account-settings"><a class="dropdown-item" href="/logoutVoter">Logout</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <!-- Container wrapper -->
+    </nav>
+    <!-- Navbar -->
+  </header>
+  <main style="margin-top: 58px;">
+    <ol class="breadcrumb pt-4 px-3">
+        <li class="breadcrumb-item"><a href="#">RUNNING CANDIDATES</a></li>
+        <li class="breadcrumb-item active" aria-current="page">VOTE WISELY</li>
+      </ol>
+    <hr style="margin-top: 5px;">
+    <div class="container pt4">
+      <div class="card mt-2">
+        <div class="card-header bg-dark text-white">
+            Candidates
+        </div>
+      </div>
+      <div class="card-body">
+        <!-- <p class="text-center">PRESIDENT</p> -->
+        <form action="/cast-vote-departmental" method="POST">
+
+            <% if (dataz.length!=0) { %>
+                <div class="row mt-5">
+                    <% if (candiCount[0]==2) { %>
+                        <div class="col-md-6 lc">
+                            <div class="left-content-body">
+
+                            <% for( let index = 0; index < dataz.length; index++ ) { %>
+                                    <% if (dataz[index].position==='President' && dataz[index].party==='save') { %>
+                                           <img src="<%=dataz[index].imgUrl%>" alt="" class="picture-holder"> 
+                                           <hr>
+                                           <p class="form-label text-center card-para">Name: <%=dataz[index].firstName%> <%=dataz[index].lastName%></p> 
+                                           <p class="form-label text-center card-para">Party: <%=dataz[index].party%> </p> 
+                                           <p class="form-label text-center card-para">Position: <%=dataz[index].position%> </p> 
+                                           <p class="form-label text-center card-para">Department: <%=dataz[index].department%> </p> 
+                                           <p class="form-label text-center card-para">Cast Vote </p> 
+                                           <div class="form-check form-vote">
+                                               <% if (user.departHasV) { %>
+                                                    <input disabled class="form-check-input" type="radio" name="president" id="president" value="<%=dataz[index].firstName%><%=dataz[index].lastName%> <%=dataz[index].position%> <%= dataz[index].party%>">
+                                               <% } else { %>
+                                                    <input class="form-check-input" type="radio" name="president" id="president" value="<%=dataz[index].firstName%><%=dataz[index].lastName%> <%=dataz[index].position%> <%= dataz[index].party%>">
+                                                <% } %>
+                                            
+                                           </div>
+                                    <% } %>
+                            <% } %>
+                            </div>
+                        </div>
+                        <div class="col-md-6 rc">
+                            <div class="right-content-body">
+                            <% for( let index = 0; index < dataz.length; index++ ) { %>
+                                    <% if (dataz[index].position==='President' && dataz[index].party==='united') { %>
+                                           <img src="<%=dataz[index].imgUrl%>" alt="" class="picture-holder"> 
+                                           <hr>
+                                           <p class="form-label text-center card-para">Name: <%=dataz[index].firstName%> <%=dataz[index].lastName%></p> 
+                                           <p class="form-label text-center card-para">Party: <%=dataz[index].party%> </p> 
+                                           <p class="form-label text-center card-para">Position: <%=dataz[index].position%> </p> 
+                                           <p class="form-label text-center card-para">Department: <%=dataz[index].department%> </p> 
+                                           <p class="form-label text-center card-para">Cast Vote </p> 
+                                           <div class="form-check form-vote">
+                                            <% if (user.departHasV) { %>
+                                                <input disabled class="form-check-input" type="radio" name="president" id="president" value="<%=dataz[index].firstName%><%=dataz[index].lastName%> <%=dataz[index].position%> <%= dataz[index].party%>">
+                                           <% } else { %>
+                                                <input class="form-check-input" type="radio" name="president" id="president" value="<%=dataz[index].firstName%><%=dataz[index].lastName%> <%=dataz[index].position%> <%= dataz[index].party%>">
+                                            <% } %>
+                                           </div>
+                                    <% } %>
+                            <% } %>
+                            </div>
+                        </div>
+                    <% } %>
+                   
+                </div>
+                <div class="row mt-5">
+                    <% if (candiCount[1]==2) { %>
+                        <div class="col-md-6 lc">
+                            <div class="left-content-body">
+
+                            <% for( let index = 0; index < dataz.length; index++ ) { %>
+                                    <% if (dataz[index].position==='Vice-President' && dataz[index].party==='save') { %>
+                                           <img src="<%=dataz[index].imgUrl%>" alt="" class="picture-holder"> 
+                                           <hr>
+                                           <p class="form-label text-center card-para">Name: <%=dataz[index].firstName%> <%=dataz[index].lastName%></p> 
+                                           <p class="form-label text-center card-para">Party: <%=dataz[index].party%> </p> 
+                                           <p class="form-label text-center card-para">Position: <%=dataz[index].position%> </p> 
+                                           <p class="form-label text-center card-para">Department: <%=dataz[index].department%> </p> 
+                                           <p class="form-label text-center card-para">Cast Vote </p> 
+                                           <div class="form-check form-vote">
+                                            <% if (user.departHasV) { %>
+                                                <input disabled class="form-check-input" type="radio" name="vicepresident" id="vicepresident" value="<%=dataz[index].firstName%><%=dataz[index].lastName%> <%=dataz[index].position%> <%= dataz[index].party%>">
+                                            <% } else { %>
+                                                <input  class="form-check-input" type="radio" name="vicepresident" id="vicepresident" value="<%=dataz[index].firstName%><%=dataz[index].lastName%> <%=dataz[index].position%> <%= dataz[index].party%>">
+                                            <% } %>
+                                            
+                                           </div>
+                                    <% } %>
+                            <% } %>
+                            </div>
+                        </div>
+                        <div class="col-md-6 rc">
+                            <div class="right-content-body">
+                            <% for( let index = 0; index < dataz.length; index++ ) { %>
+                                    <% if (dataz[index].position==='Vice-President' && dataz[index].party==='united') { %>
+                                           <img src="<%=dataz[index].imgUrl%>" alt="" class="picture-holder"> 
+                                           <hr>
+                                           <p class="form-label text-center card-para">Name: <%=dataz[index].firstName%> <%=dataz[index].lastName%></p> 
+                                           <p class="form-label text-center card-para">Party: <%=dataz[index].party%> </p> 
+                                           <p class="form-label text-center card-para">Position: <%=dataz[index].position%> </p> 
+                                           <p class="form-label text-center card-para">Department: <%=dataz[index].department%> </p> 
+                                           <p class="form-label text-center card-para">Cast Vote </p> 
+                                           <div class="form-check form-vote">
+                                            <% if (user.departHasV) { %>
+                                                <input disabled class="form-check-input" type="radio" name="vicepresident" id="vicepresident" value="<%=dataz[index].firstName%><%=dataz[index].lastName%> <%=dataz[index].position%> <%= dataz[index].party%>">
+                                            <% } else { %>
+                                                <input  class="form-check-input" type="radio" name="vicepresident" id="vicepresident" value="<%=dataz[index].firstName%><%=dataz[index].lastName%> <%=dataz[index].position%> <%= dataz[index].party%>">
+                                            <% } %>
+                                           </div>
+                                    <% } %>
+                            <% } %>
+                            </div>
+                        </div>
+                    <% } %>
+                   
+                </div>
+                <div class="row mt-5">
+                    <% if (candiCount[2]==2) { %>
+                        <div class="col-md-6 lc">
+                            <div class="left-content-body">
+
+                            <% for( let index = 0; index < dataz.length; index++ ) { %>
+                                    <% if (dataz[index].position==='Secretary' && dataz[index].party==='save') { %>
+                                           <img src="<%=dataz[index].imgUrl%>" alt="" class="picture-holder"> 
+                                           <hr>
+                                           <p class="form-label text-center card-para">Name: <%=dataz[index].firstName%> <%=dataz[index].lastName%></p> 
+                                           <p class="form-label text-center card-para">Party: <%=dataz[index].party%> </p> 
+                                           <p class="form-label text-center card-para">Position: <%=dataz[index].position%> </p> 
+                                           <p class="form-label text-center card-para">Department: <%=dataz[index].department%> </p> 
+                                           <p class="form-label text-center card-para">Cast Vote </p> 
+                                           <div class="form-check form-vote">
+                                            <% if (user.departHasV) { %>
+                                                <input disabled class="form-check-input" type="radio" name="secretary" id="secretary" value="<%=dataz[index].firstName%><%=dataz[index].lastName%> <%=dataz[index].position%> <%= dataz[index].party%>">
+                                            <% } else { %>
+                                                <input class="form-check-input" type="radio" name="secretary" id="secretary" value="<%=dataz[index].firstName%><%=dataz[index].lastName%> <%=dataz[index].position%> <%= dataz[index].party%>">
+                                            <% } %>
+                                           
+                                           </div>
+                                    <% } %>
+                            <% } %>
+                            </div>
+                        </div>
+                        <div class="col-md-6 rc">
+                            <div class="right-content-body">
+                            <% for( let index = 0; index < dataz.length; index++ ) { %>
+                                    <% if (dataz[index].position==='Secretary' && dataz[index].party==='united') { %>
+                                           <img src="<%=dataz[index].imgUrl%>" alt="" class="picture-holder"> 
+                                           <hr>
+                                           <p class="form-label text-center card-para">Name: <%=dataz[index].firstName%> <%=dataz[index].lastName%></p> 
+                                           <p class="form-label text-center card-para">Party: <%=dataz[index].party%> </p> 
+                                           <p class="form-label text-center card-para">Position: <%=dataz[index].position%> </p> 
+                                           <p class="form-label text-center card-para">Department: <%=dataz[index].department%> </p> 
+                                           <p class="form-label text-center card-para">Cast Vote </p> 
+                                           <div class="form-check form-vote">
+                                            <% if (user.departHasV) { %>
+                                                <input disabled class="form-check-input" type="radio" name="secretary" id="secretary" value="<%=dataz[index].firstName%><%=dataz[index].lastName%> <%=dataz[index].position%> <%= dataz[index].party%>">
+                                            <% } else { %>
+                                                <input class="form-check-input" type="radio" name="secretary" id="secretary" value="<%=dataz[index].firstName%><%=dataz[index].lastName%> <%=dataz[index].position%> <%= dataz[index].party%>">
+                                            <% } %>
+                                           </div>
+                                    <% } %>
+                            <% } %>
+                            </div>
+                        </div>
+                    <% } %>
+                   
+                </div>
+                <div class="row mt-5">
+                    <% if (candiCount[3]==2) { %>
+                        <div class="col-md-6 lc">
+                            <div class="left-content-body">
+
+                            <% for( let index = 0; index < dataz.length; index++ ) { %>
+                                    <% if (dataz[index].position==='Treasurer' && dataz[index].party==='save') { %>
+                                           <img src="<%=dataz[index].imgUrl%>" alt="" class="picture-holder"> 
+                                           <hr>
+                                           <p class="form-label text-center card-para">Name: <%=dataz[index].firstName%> <%=dataz[index].lastName%></p> 
+                                           <p class="form-label text-center card-para">Party: <%=dataz[index].party%> </p> 
+                                           <p class="form-label text-center card-para">Position: <%=dataz[index].position%> </p> 
+                                           <p class="form-label text-center card-para">Department: <%=dataz[index].department%> </p> 
+                                           <p class="form-label text-center card-para">Cast Vote </p> 
+                                           <div class="form-check form-vote">
+                                            <% if (user.departHasV) { %>
+                                                <input disabled class="form-check-input" type="radio" name="treasurer" id="treasurer" value="<%=dataz[index].firstName%><%=dataz[index].lastName%> <%=dataz[index].position%> <%= dataz[index].party%>">
+                                            <% } else { %>
+                                                <input class="form-check-input" type="radio" name="treasurer" id="treasurer" value="<%=dataz[index].firstName%><%=dataz[index].lastName%> <%=dataz[index].position%> <%= dataz[index].party%>">
+                                            <% } %>
+                                            
+                                           </div>
+                                    <% } %>
+                            <% } %>
+                            </div>
+                        </div>
+                        <div class="col-md-6 rc">
+                            <div class="right-content-body">
+                            <% for( let index = 0; index < dataz.length; index++ ) { %>
+                                    <% if (dataz[index].position==='Treasurer' && dataz[index].party==='united') { %>
+                                           <img src="<%=dataz[index].imgUrl%>" alt="" class="picture-holder"> 
+                                           <hr>
+                                           <p class="form-label text-center card-para">Name: <%=dataz[index].firstName%> <%=dataz[index].lastName%></p> 
+                                           <p class="form-label text-center card-para">Party: <%=dataz[index].party%> </p> 
+                                           <p class="form-label text-center card-para">Position: <%=dataz[index].position%> </p> 
+                                           <p class="form-label text-center card-para">Department: <%=dataz[index].department%> </p> 
+                                           <p class="form-label text-center card-para">Cast Vote </p> 
+                                           <div class="form-check form-vote">
+                                            <% if (user.departHasV) { %>
+                                                <input disabled class="form-check-input" type="radio" name="treasurer" id="treasurer" value="<%=dataz[index].firstName%><%=dataz[index].lastName%> <%=dataz[index].position%> <%= dataz[index].party%>">
+                                            <% } else { %>
+                                                <input class="form-check-input" type="radio" name="treasurer" id="treasurer" value="<%=dataz[index].firstName%><%=dataz[index].lastName%> <%=dataz[index].position%> <%= dataz[index].party%>">
+                                            <% } %>
+                                           </div>
+                                    <% } %>
+                            <% } %>
+                            </div>
+                        </div>
+                    <% } %>
+                   
+                </div>
+                <div class="row mt-5">
+                    <% if (candiCount[4]==2) { %>
+                        <div class="col-md-6 lc">
+                            <div class="left-content-body">
+
+                            <% for( let index = 0; index < dataz.length; index++ ) { %>
+                                    <% if (dataz[index].position==='PIO' && dataz[index].party==='save') { %>
+                                           <img src="<%=dataz[index].imgUrl%>" alt="" class="picture-holder"> 
+                                           <hr>
+                                           <p class="form-label text-center card-para">Name: <%=dataz[index].firstName%> <%=dataz[index].lastName%></p> 
+                                           <p class="form-label text-center card-para">Party: <%=dataz[index].party%> </p> 
+                                           <p class="form-label text-center card-para">Position: <%=dataz[index].position%> </p> 
+                                           <p class="form-label text-center card-para">Department: <%=dataz[index].department%> </p> 
+                                           <p class="form-label text-center card-para">Cast Vote </p> 
+                                           <div class="form-check form-vote">
+                                            <% if (user.departHasV) { %>
+                                                <input disabled class="form-check-input" type="radio" name="pio" id="pio" value="<%=dataz[index].firstName%><%=dataz[index].lastName%> <%=dataz[index].position%> <%= dataz[index].party%>">
+                                            <% } else { %>
+                                                <input class="form-check-input" type="radio" name="pio" id="pio" value="<%=dataz[index].firstName%><%=dataz[index].lastName%> <%=dataz[index].position%> <%= dataz[index].party%>">
+                                            <% } %>
+                                            
+                                           </div>
+                                    <% } %>
+                            <% } %>
+                            </div>
+                        </div>
+                        <div class="col-md-6 rc">
+                            <div class="right-content-body">
+                            <% for( let index = 0; index < dataz.length; index++ ) { %>
+                                    <% if (dataz[index].position==='PIO' && dataz[index].party==='united') { %>
+                                           <img src="<%=dataz[index].imgUrl%>" alt="" class="picture-holder"> 
+                                           <hr>
+                                           <p class="form-label text-center card-para">Name: <%=dataz[index].firstName%> <%=dataz[index].lastName%></p> 
+                                           <p class="form-label text-center card-para">Party: <%=dataz[index].party%> </p> 
+                                           <p class="form-label text-center card-para">Position: <%=dataz[index].position%> </p> 
+                                           <p class="form-label text-center card-para">Department: <%=dataz[index].department%> </p> 
+                                           <p class="form-label text-center card-para">Cast Vote </p> 
+                                           <div class="form-check form-vote">
+                                            <% if (user.departHasV) { %>
+                                                <input disabled class="form-check-input" type="radio" name="pio" id="pio" value="<%=dataz[index].firstName%><%=dataz[index].lastName%> <%=dataz[index].position%> <%= dataz[index].party%>">
+                                            <% } else { %>
+                                                <input class="form-check-input" type="radio" name="pio" id="pio" value="<%=dataz[index].firstName%><%=dataz[index].lastName%> <%=dataz[index].position%> <%= dataz[index].party%>">
+                                            <% } %>
+                                           </div>
+                                    <% } %>
+                            <% } %>
+                            </div>
+                        </div>
+                    <% } %>
+                   
+                </div>
+                <div class="row mt-5">
+                    <% if (candiCount[5]==2) { %>
+                        <div class="col-md-6 lc">
+                            <div class="left-content-body">
+
+                            <% for( let index = 0; index < dataz.length; index++ ) { %>
+                                    <% if (dataz[index].position==='Auditor' && dataz[index].party==='save') { %>
+                                           <img src="<%=dataz[index].imgUrl%>" alt="" class="picture-holder"> 
+                                           <hr>
+                                           <p class="form-label text-center card-para">Name: <%=dataz[index].firstName%> <%=dataz[index].lastName%></p> 
+                                           <p class="form-label text-center card-para">Party: <%=dataz[index].party%> </p> 
+                                           <p class="form-label text-center card-para">Position: <%=dataz[index].position%> </p> 
+                                           <p class="form-label text-center card-para">Department: <%=dataz[index].department%> </p> 
+                                           <p class="form-label text-center card-para">Cast Vote </p> 
+                                           <div class="form-check form-vote">
+                                            <% if (user.departHasV) { %>
+                                                <input disabled class="form-check-input" type="radio" name="auditor" id="auditor" value="<%=dataz[index].firstName%><%=dataz[index].lastName%> <%=dataz[index].position%> <%= dataz[index].party%>">
+                                            <% } else { %>
+                                                <input class="form-check-input" type="radio" name="auditor" id="auditor" value="<%=dataz[index].firstName%><%=dataz[index].lastName%> <%=dataz[index].position%> <%= dataz[index].party%>">
+                                            <% } %>
+                                           </div>
+                                    <% } %>
+                            <% } %>
+                            </div>
+                        </div>
+                        <div class="col-md-6 rc">
+                            <div class="right-content-body">
+                            <% for( let index = 0; index < dataz.length; index++ ) { %>
+                                    <% if (dataz[index].position==='Auditor' && dataz[index].party==='united') { %>
+                                           <img src="<%=dataz[index].imgUrl%>" alt="" class="picture-holder"> 
+                                           <hr>
+                                           <p class="form-label text-center card-para">Name: <%=dataz[index].firstName%> <%=dataz[index].lastName%></p> 
+                                           <p class="form-label text-center card-para">Party: <%=dataz[index].party%> </p> 
+                                           <p class="form-label text-center card-para">Position: <%=dataz[index].position%> </p> 
+                                           <p class="form-label text-center card-para">Department: <%=dataz[index].department%> </p> 
+                                           <p class="form-label text-center card-para">Cast Vote </p> 
+                                           <div class="form-check form-vote">
+                                            <% if (user.departHasV) { %>
+                                                <input disabled class="form-check-input" type="radio" name="auditor" id="auditor" value="<%=dataz[index].firstName%><%=dataz[index].lastName%> <%=dataz[index].position%> <%= dataz[index].party%>">
+                                            <% } else { %>
+                                                <input class="form-check-input" type="radio" name="auditor" id="auditor" value="<%=dataz[index].firstName%><%=dataz[index].lastName%> <%=dataz[index].position%> <%= dataz[index].party%>">
+                                            <% } %>
+                                            
+                                           </div>
+                                    <% } %>
+                            <% } %>
+                            </div>
+                        </div>
+                    <% } %>
+                   
+                </div>
+                <div class="row mt-5">
+                    <% if (candiCount[6]==2) { %>
+                        <div class="col-md-6 lc">
+                            <div class="left-content-body">
+
+                            <% for( let index = 0; index < dataz.length; index++ ) { %>
+                                    <% if (dataz[index].position==='PRO' && dataz[index].party==='save') { %>
+                                           <img src="<%=dataz[index].imgUrl%>" alt="" class="picture-holder"> 
+                                           <hr>
+                                           <p class="form-label text-center card-para">Name: <%=dataz[index].firstName%> <%=dataz[index].lastName%></p> 
+                                           <p class="form-label text-center card-para">Party: <%=dataz[index].party%> </p> 
+                                           <p class="form-label text-center card-para">Position: <%=dataz[index].position%> </p> 
+                                           <p class="form-label text-center card-para">Department: <%=dataz[index].department%> </p> 
+                                           <p class="form-label text-center card-para">Cast Vote </p> 
+                                           <div class="form-check form-vote">
+                                            <% if (user.departHasV) { %>
+                                                <input disabled class="form-check-input" type="radio" name="pro" id="pro" value="<%=dataz[index].firstName%><%=dataz[index].lastName%> <%=dataz[index].position%> <%= dataz[index].party%>">
+                                            <% } else { %>
+                                                <input class="form-check-input" type="radio" name="pro" id="pro" value="<%=dataz[index].firstName%><%=dataz[index].lastName%> <%=dataz[index].position%> <%= dataz[index].party%>">
+                                            <% } %>
+                                           
+                                           </div>
+                                    <% } %>
+                            <% } %>
+                            </div>
+                        </div>
+                        <div class="col-md-6 rc">
+                            <div class="right-content-body">
+                            <% for( let index = 0; index < dataz.length; index++ ) { %>
+                                    <% if (dataz[index].position==='PRO' && dataz[index].party==='united') { %>
+                                           <img src="<%=dataz[index].imgUrl%>" alt="" class="picture-holder"> 
+                                           <hr>
+                                           <p class="form-label text-center card-para">Name: <%=dataz[index].firstName%> <%=dataz[index].lastName%></p> 
+                                           <p class="form-label text-center card-para">Party: <%=dataz[index].party%> </p> 
+                                           <p class="form-label text-center card-para">Position: <%=dataz[index].position%> </p> 
+                                           <p class="form-label text-center card-para">Department: <%=dataz[index].department%> </p> 
+                                           <p class="form-label text-center card-para">Cast Vote </p> 
+                                           <div class="form-check form-vote">
+                                            <% if (user.departHasV) { %>
+                                                <input disabled class="form-check-input" type="radio" name="pro" id="pro" value="<%=dataz[index].firstName%><%=dataz[index].lastName%> <%=dataz[index].position%> <%= dataz[index].party%>">
+                                            <% } else { %>
+                                                <input class="form-check-input" type="radio" name="pro" id="pro" value="<%=dataz[index].firstName%><%=dataz[index].lastName%> <%=dataz[index].position%> <%= dataz[index].party%>">
+                                            <% } %>
+                                           </div>
+                                    <% } %>
+                            <% } %>
+                            </div>
+                        </div>
+                    <% } %>
+                   
+                </div>
+            <% } %>
+            
+            
+         
+          <hr>
+          <div class="container">
+            <div class="row">
+              <button class="btn-dark btn">Submit Vote</button>
+            </div>
+          </div>
+          
+        </form>
+    
+        
+        
+      </div>
+    </div>
+  </main>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+
+</body>
+</html>

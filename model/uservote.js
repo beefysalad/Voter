@@ -14,12 +14,23 @@ const representative = new Schema({
     firstName:String,
     lastName:String,
     party:String,
-    position:String
+    position:String,
+    imgUrl:String
+})
+const departmental = new Schema({
+    _id:false,
+    firstName:String,
+    lastName:String,
+    party:String,
+    position:String,
+    department:String,
+    imgUrl:String
 })
 const userVotes = new Schema({
     _id:String,
     execom:[execom],
-    representative:[representative]
+    representative:[representative],
+    departmental: [departmental]
 
 })
 module.exports = mongoose.model('userVote',userVotes)

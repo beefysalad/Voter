@@ -5,10 +5,10 @@ const path = require('path')
 const mongoose = require('mongoose')
 const Admin = require('./model/admin')
 const Voter = require('./model/voter')
-const Candidate = require('./model/candidate')
+// const Candidate = require('./model/candidate')
 const General = require('./model/general')
 const Department = require('./model/department')
-const Votes = require('./model/votes')
+// const Votes = require('./model/votes')
 const bcrypt = require('bcrypt')
 const flash = require('express-flash')
 const session = require('express-session')
@@ -175,6 +175,8 @@ app.get('/voters-candidates/GeneralElection',isLoggedInV,async(req,res)=>{
     let representative = []
     const check = true
     let array = []
+    let dataz= []
+    let isGeneral = true,isDepartmental = false
     for(let i=0; i<data.length; i++){
         if(data[i].executive==='Representative'){
            representative.push(data[i])
@@ -182,20 +184,24 @@ app.get('/voters-candidates/GeneralElection',isLoggedInV,async(req,res)=>{
             executive.push(data[i])
         }
     }
-    res.render('voter/eventtlist',{user,votingFor,executive,representative,check,data})
+    res.render('voter/eventtlist',{dataz,user,votingFor,executive,representative,check,data,isGeneral,isDepartmental})
 })
 app.get('/voters-candidates/DepartmentalElection',isLoggedInV,async(req,res)=>{
     const user = req.user
     const check = false
     const votingFor = "Departmental Election"
     const data = await Department.find({})
+    let isGeneral = false,isDepartmental = true
     let array = []
-    // for(let i=0; i<data.length; i++){
-    //     if(data[i].event===votingFor){
-    //         array.push(data[i])
-    //     }
-    // }
-    res.render('voter/eventlist',{user,votingFor,array,check,data})
+    let executive = []
+    let representative = []
+    let dataz = []
+    for(let i=0; i<data.length; i++){
+        if(data[i].department===user.department){
+            dataz.push(data[i])
+        }
+    }
+    res.render('voter/eventtlist',{user,votingFor,array,check,dataz,executive,representative,isGeneral,isDepartmental})
 })
 app.get('/voters-dashboard',isLoggedInV,async(req,res)=>{
     const user = req.user
@@ -219,12 +225,104 @@ app.get('/voters-general-execom',isLoggedInV,async(req,res)=>{
 })
 app.get('/voters-general-representative',isLoggedInV,async(req,res)=>{
     const user = req.user
+    const data = await General.find({})
+    let departmentRep = []
+    for(let i=0;i<data.length;i++){
+        if(((data[i].executive==='Representative')&&data[i].department===req.user.department)){
+            departmentRep.push(data[i])
+        }
+    }
+    res.render('voter/representative',{data,user,departmentRep})
     
 })
 app.get('/voters-departmental',isLoggedInV,async(req,res)=>{
     const user = req.user  
+    const compareArray = ['President','Vice-President','Secretary','Treasurer','PIO','Auditor','PRO']
+    let candiCount = [0,0,0,0,0,0,0]
+    let dataz=[]
+    const data = await Department.find({})
     
+    for(let i=0; i<data.length; i++){
+        if(req.user.department===data[i].department){
+            for(let j=0; j<compareArray.length; j++){
+                if(data[i].position===compareArray[j]){
+                    let currCount = candiCount[j]
+                    currCount++
+                    candiCount[j] = currCount
+                }
+            }
+            dataz.push(data[i])
+        }
+    }
+    res.render('voter/departmental',{user,dataz,candiCount,compareArray})
+    // res.send(candiCount)
 
+})
+app.post('/cast-vote-departmental',async(req,res)=>{
+    const {president,vicepresident,secretary,treasurer,pio,auditor,pro} = req.body
+    let voteArray =[]
+    voteArray.push(president)
+    voteArray.push(vicepresident)
+    voteArray.push(secretary)
+    voteArray.push(treasurer)
+    voteArray.push(pio)
+    voteArray.push(auditor)
+    voteArray.push(pro)
+    const data = await Department.find({})
+    let id,voteCount
+    for(let i=0; i<data.length; i++){
+        for(let j=0; j<voteArray.length; j++){
+            if(`${data[i].firstName}${data[i].lastName} ${data[i].position} ${data[i].party}`===voteArray[j]){
+                id = data[i]._id
+                voteCount=data[i].voteCount
+                voteCount++
+                Department.findOneAndUpdate({_id:id},{voteCount}).then(data=>console.log())
+                const arrObject = [{
+                    firstName: data[i].firstName,
+                    lastName:data[i].lastName,
+                    party:data[i].party,
+                    position:data[i].position,
+                    department:data[i].department,
+                    imgUrl:data[i].imgUrl
+                }]
+                UserVote.findOneAndUpdate({_id:req.user._id},
+                    {$push:{departmental: arrObject}}).then(data=>console.log(data))
+            }
+        }
+    }
+    Voter.findOneAndUpdate({_id:req.user._id},{departHasV:true}).then(()=>{})
+    res.redirect('/voters-dashboard')
+})
+app.post('/cast-vote-representative',async(req,res)=>{
+    const {rep} = req.body
+    // res.send(req.body)
+    let voteArray= [] 
+    voteArray.push(rep)
+    const data = await General.find({})
+    let id,voteCount
+    for(let i=0;i<data.length;i++){
+        for(let j=0;j<voteArray.length;j++){
+            if(`${data[i].firstName}${data[i].lastName} department representative ${data[i].party}`===voteArray[j]){
+                id = data[i]._id
+                voteCount = data[i].voteCount
+                // console.log(voteCount)
+                voteCount++
+                // console.log(voteCount)
+                General.findOneAndUpdate({_id:id},{voteCount}).then(data=>{console.log()})
+                const arrObject = [{
+                    firstName: data[i].firstName,
+                    lastName:data[i].lastName,
+                    party:data[i].party,
+                    position:'department representative',
+                    imgUrl:data[i].imgUrl
+                }]
+                UserVote.findOneAndUpdate({_id:req.user._id},
+                    {$push:{representative: arrObject}}).then(data=>console.log(data))
+            }
+        }
+    }
+    Voter.findOneAndUpdate({_id:req.user._id},{repHasV:true}).then(()=>{})
+    res.redirect('/voters-dashboard')
 })
 app.post('/cast-vote-execom',async(req,res)=>{
     const {president,vicepresident,secgeneral} = req.body
@@ -257,9 +355,8 @@ app.post('/cast-vote-execom',async(req,res)=>{
         
     }
     Voter.findOneAndUpdate({_id:req.user._id},{exeComHasV:true}).then(()=>{})
-   
     res.redirect('/voters-dashboard')
-    // res.send(voteArray)
+    
 })
 app.post('/voters-login',passport.authenticate('voter',{
     successRedirect: '/voters-dashboard',
@@ -277,6 +374,25 @@ app.get('/my-execom',isLoggedInV,async(req,res)=>{
     const data = await UserVote.findById(id)
     // console.log(data)
     res.render('voter/myexecom',{user,data})
+})
+app.get('/my-departmentals',isLoggedInV,async(req,res)=>{
+    const id = req.user._id
+    // console.log(id)
+    const user = req.user
+    const data = await UserVote.findById(id)
+    // console.log(data)
+    res.render('voter/mydeparment',{user,data})
+})
+app.get('/my-representative',isLoggedInV,async(req,res)=>{
+    const id = req.user._id
+    // console.log(id)
+    const user = req.user
+    const data = await UserVote.findById(id)
+    // console.log(data)
+    // for(let i=0; data.representative.length; i++){
+
+    // }
+    res.render('voter/myrep',{user,data})
 })
 app.post('/voters-registration',(req,res)=>{
    
@@ -381,6 +497,42 @@ app.get('/registered-candidates/GeneralElection',isLoggedInA,async(req,res)=>{
     }
     res.render('adminn/eventlist',{user,votingFor,executive,representative,check,data})
 })
+app.get('/admin-tally-votes',isLoggedInA,async(req,res)=>{
+    const user =req.user
+    const department = await Department.find({})
+    const general = await General.find({})
+    res.render('adminn/tally',{user,department,general})
+})
+app.get('/tally-candidates/GeneralElection',isLoggedInA,async(req,res)=>{
+    const user = req.user
+    const votingFor = "General Election"
+    const data = await General.find({})
+    let executive = []
+    let representative = []
+    const check = true
+    let array = []
+    for(let i=0; i<data.length; i++){
+        if(data[i].executive==='Representative'){
+           representative.push(data[i])
+        }else if(data[i].executive==='Execom'){
+            executive.push(data[i])
+        }
+    }
+    res.render('adminn/eventtally',{user,votingFor,executive,representative,check,data})
+})
+app.get('/tally-candidates/DepartmentalElection',isLoggedInA,async(req,res)=>{
+    const user = req.user
+    const check = false
+    const votingFor = "Departmental Election"
+    const data = await Department.find({})
+    let array = []
+    // for(let i=0; i<data.length; i++){
+    //     if(data[i].event===votingFor){
+    //         array.push(data[i])
+    //     }
+    // }
+    res.render('adminn/eventtally',{user,votingFor,array,check,data})
+})
 app.get('/registered-candidates/DepartmentalElection',isLoggedInA,async(req,res)=>{
     const user = req.user
     const check = false
@@ -404,6 +556,7 @@ app.get('/admin-add-candidates',isLoggedInA,(req,res)=>{
     const user = req.user
     res.render('adminn/addcandidate',{user})
 })
+
 app.post('/admin-add-candidate',upload.single('img'),async(req,res)=>{
     // res.send(req.body.executive)
     if(req.body.event === 'General Election'){
